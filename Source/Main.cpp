@@ -1,7 +1,7 @@
 #include <Windows.h>
 
 
-INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)
+INT WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)
 {
 
 	return 0;

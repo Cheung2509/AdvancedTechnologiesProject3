@@ -1,5 +1,0 @@
-﻿  Main.cpp
-  window.cpp
-c:\users\cheun\desktop\advancedtechnologiesblock1\source\window.cpp(5): error C2440: '=': cannot convert from 'const char *' to 'LPCWSTR'
-  c:\users\cheun\desktop\advancedtechnologiesblock1\source\window.cpp(5): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
-  Generating Code...
