@@ -71,6 +71,7 @@ const bool Application::initialize(const wchar_t* className)
 
 const bool Application::run()
 {
+
 	if (!IsWindowVisible(m_hWnd))
 		ShowWindow(m_hWnd, SW_SHOW);
 
