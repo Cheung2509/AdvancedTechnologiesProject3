@@ -44,6 +44,7 @@ const bool Application::initialize(const wchar_t* className)
 		m_hInstance = GetModuleHandle(NULL);
 	}
 
+	//Setting Application name
 	m_applicationName = className;
 
 	//Registering Window class
@@ -67,7 +68,7 @@ const bool Application::initialize(const wchar_t* className)
 		return false;
 	}
 
-	m_hWnd = CreateWindow(m_applicationName.c_str(), L"Advanced Tech Project",
+	m_hWnd = CreateWindow(m_applicationName.c_str(), m_applicationName.c_str(),
 						  WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 640, 480,
 						  0, m_hMenu, m_hInstance, 0);
 
@@ -88,6 +89,7 @@ const bool Application::initialize(const wchar_t* className)
 	std::ofstream console_out("CONOUT$");
 	std::cout.rdbuf(console_out.rdbuf());
 
+	//Print version of OpenGL
 	std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
 #endif
 

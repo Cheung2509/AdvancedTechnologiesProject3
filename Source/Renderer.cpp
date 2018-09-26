@@ -4,6 +4,7 @@
 
 Renderer::~Renderer()
 {
+	//Delete context once done
 	wglDeleteContext(m_deviceContext);
 }
 
@@ -25,10 +26,10 @@ const bool Renderer::init(HWND& hWnd)
 	return true;
 }
 
+//Temporary Draw loop
 void Renderer::draw(HDC& dc)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 
 	glBegin(GL_TRIANGLES);
 	glVertex2f(-0.5f, -0.5f);
