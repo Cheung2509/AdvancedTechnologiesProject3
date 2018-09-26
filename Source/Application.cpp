@@ -1,5 +1,10 @@
 #include "Application.h"
 
+#if _DEBUG == 1
+#include <iostream>
+#include <fstream>
+#endif
+
 Application::~Application()
 {
 	UnregisterClass(m_applicationName.c_str(), m_hInstance);
@@ -38,7 +43,7 @@ const bool Application::initialize(const wchar_t* className)
 	{
 		m_hInstance = GetModuleHandle(NULL);
 	}
-	
+
 	m_applicationName = className;
 
 	//Registering Window class
@@ -62,16 +67,35 @@ const bool Application::initialize(const wchar_t* className)
 		return false;
 	}
 
-	m_hWnd = CreateWindow(m_applicationName.c_str(), L"Advanced Tech Project", 
+	m_hWnd = CreateWindow(m_applicationName.c_str(), L"Advanced Tech Project",
 						  WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 640, 480,
 						  0, m_hMenu, m_hInstance, 0);
+
+	m_renderer = std::make_shared<Renderer>();
+
+	if (!m_renderer->init(m_hWnd))
+	{
+		return false;
+	}
+
+#if _DEBUG == 1
+	//Initiate console for debugging
+	if (!AllocConsole())
+	{
+		return false;
+	}
+
+	std::ofstream console_out("CONOUT$");
+	std::cout.rdbuf(console_out.rdbuf());
+
+	std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
+#endif
 
 	return true;
 }
 
 const bool Application::run()
 {
-
 	if (!IsWindowVisible(m_hWnd))
 		ShowWindow(m_hWnd, SW_SHOW);
 
@@ -84,7 +108,7 @@ const bool Application::run()
 	while (WM_QUIT != msg.message)
 	{
 		// Process window events.
-		// Use PeekMessage() so we can use idle time to render the scene. 
+		// Use PeekMessage() so we can use idle time to render the scene.
 		bGotMsg = (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE) != 0);
 
 		if (bGotMsg)
@@ -95,6 +119,8 @@ const bool Application::run()
 		}
 		else
 		{
+			HDC dc = GetDC(m_hWnd);
+			m_renderer->draw(dc);
 		}
 	}
 
@@ -105,6 +131,36 @@ LRESULT Application::staticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 {
 	switch (uMsg)
 	{
+	case WM_CREATE:
+	{
+		PIXELFORMATDESCRIPTOR pfd =
+		{
+			sizeof(PIXELFORMATDESCRIPTOR),
+			1,
+			PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,    //Flags
+			PFD_TYPE_RGBA,        // The kind of framebuffer. RGBA or palette.
+			32,                   // Colordepth of the framebuffer.
+			0, 0, 0, 0, 0, 0,
+			0,
+			0,
+			0,
+			0, 0, 0, 0,
+			24,                   // Number of bits for the depthbuffer
+			8,                    // Number of bits for the stencilbuffer
+			0,                    // Number of Aux buffers in the framebuffer.
+			PFD_MAIN_PLANE,
+			0,
+			0, 0, 0
+		};
+
+		HDC windowHandleToDC = GetDC(hWnd);
+
+		int windowPixelFormat = ChoosePixelFormat(windowHandleToDC, &pfd);
+		SetPixelFormat(windowHandleToDC, windowPixelFormat, &pfd);
+
+		break;
+	}
+
 	case WM_CLOSE:
 	{
 		if (hWnd != NULL)

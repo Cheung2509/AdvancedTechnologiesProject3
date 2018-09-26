@@ -10,6 +10,9 @@
 //Includes
 #include <Windows.h>
 #include <string>
+#include <memory>
+
+#include "Renderer.h"
 
 class Application
 {
@@ -29,4 +32,5 @@ private:
 	HWND m_hWnd;
 	HMENU m_hMenu;
 
+	std::shared_ptr<Renderer> m_renderer;
 };
