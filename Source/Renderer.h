@@ -2,8 +2,8 @@
 
 #define GL_GLEXT_PROTOTYPES
 
+#include <GL/glew.h>
 #include <Windows.h>
-#include <gl/GL.h>
 #include <memory>
 
 #pragma comment(lib, "opengl32.lib")
@@ -22,4 +22,5 @@ public:
 	const HGLRC& getContext() const { return m_deviceContext; }
 private:
 	HGLRC m_deviceContext;
+	HDC m_hdc;
 };
