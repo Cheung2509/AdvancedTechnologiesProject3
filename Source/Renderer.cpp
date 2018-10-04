@@ -6,7 +6,12 @@
 #include "Vendor/glm/gtc/matrix_transform.hpp"
 
 #include <iostream>
+
 #include "Application.h"
+
+#include "VertexArray.h"
+#include "IndexBuffer.h"
+#include "Shader.h"
 
 Renderer::~Renderer()
 {
@@ -17,13 +22,13 @@ Renderer::~Renderer()
 const bool Renderer::init(HWND& hWnd)
 {
 	//Get windows Handle to device context
-	m_hdc = GetDC(hWnd);
+	HDC hdc = GetDC(hWnd);
 
 	//Create a dummy context
-	m_deviceContext = wglCreateContext(m_hdc);
+	m_deviceContext = wglCreateContext(hdc);
 
 	//Make the context current and if failed return false
-	if (!wglMakeCurrent(m_hdc, m_deviceContext))
+	if (!wglMakeCurrent(hdc, m_deviceContext))
 	{
 		return false;
 	}
@@ -51,72 +56,37 @@ const bool Renderer::init(HWND& hWnd)
 	UINT numFormats;
 
 	//If pixel chosen pixel format cannot be chosen, return false
-	if (!wglChoosePixelFormatARB(m_hdc, attribList, NULL, 1,
+	if (!wglChoosePixelFormatARB(hdc, attribList, NULL, 1,
 		&pixelFormat, &numFormats))
 	{
 		return false;
 	}
 
 	//Creating context with attributes
-	m_deviceContext = wglCreateContextAttribsARB(m_hdc, m_deviceContext, attribList);
+	m_deviceContext = wglCreateContextAttribsARB(hdc, m_deviceContext, attribList);
 
 #if _DEBUG == 1
 	//Print version of OpenGL
 	std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
 #endif
 
-	//Create temporary vertex buffer
-	float positions[] =
-	{
-		-0.5f, -0.5f,
-		 0.5f, -0.5f,
-		 0.5f,  0.5f,
-		-0.5f,  0.5f
-	};
-
-	unsigned int indices[] =
-	{
-		0, 1 ,2,
-		2, 3, 0
-	};
-
-	unsigned int m_vao;
-	glGenVertexArrays(1, &m_vao);
-	glBindVertexArray(m_vao);
-
-	m_va = std::make_unique<VertexArray>();
-	VertexBuffer vb = VertexBuffer(positions, 4 * 2 * sizeof(float));
-
-	VertexBufferLayout layout;
-	layout.push<float>(2);
-	m_va->addBuffer(vb, layout);
-
-	m_ibo = std::make_unique<IndexBuffer>(indices, 6);
-
-	m_shader = std::make_unique<Shader>("Resources/Shaders/VertexShader.glsl", "Resources/Shaders/FragmentShader.frag");
-
-	glBindVertexArray(0);
-	glUseProgram(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
 	//If all initalization suceeded return true
 	return true;
 }
 
-//Temporary Draw loop
-void Renderer::draw(HDC& dc)
+
+
+void Renderer::clear() const
 {
 	glClear(GL_COLOR_BUFFER_BIT);
+}
 
-	
-	m_shader->bind();
-	m_shader->setUniform4f("u_colour", 0.8f, 0.3f, 0.8f, 1.0f);
+void Renderer::draw(const VertexArray & va, const IndexBuffer& ib, const Shader & shader, HDC hdc)
+{
+	shader.bind();
+	va.bind();
+	ib.bind();
+	glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, nullptr);
 
-	m_va->bind();
-	m_ibo->bind();
-
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-
-	SwapBuffers(m_hdc);
+	//SwapBuffers(hdc);
 }

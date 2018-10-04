@@ -9,9 +9,9 @@
 #pragma comment(lib, "opengl32.lib")
 #pragma comment(lib, "glu32.lib")
 
-#include "IndexBuffer.h"
-#include "VertexArray.h"
-#include "Shader.h"
+class VertexArray;
+class IndexBuffer;
+class Shader;
 
 class Renderer
 {
@@ -20,18 +20,11 @@ public:
 	~Renderer();
 
 	const bool init(HWND& hWnd);
-	
-	void draw(HDC& dc);
+
+	void clear() const;
+	void draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader, HDC hdc);
 
 	const HGLRC& getContext() const { return m_deviceContext; }
 private:
 	HGLRC m_deviceContext;
-	HDC m_hdc;
-
-	std::unique_ptr<IndexBuffer> m_ibo;
-
-	std::unique_ptr<VertexArray> m_va;
-	std::unique_ptr<Shader> m_shader;
-
-	unsigned int m_vao;
 };
