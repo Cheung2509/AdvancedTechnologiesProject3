@@ -6,6 +6,22 @@
 
 #include <fstream>
 
+static void GLClearError()
+{
+	while (glGetError() != GL_NO_ERROR)
+	{
+
+	}
+}
+
+static void GLCheckError()
+{
+	while (GLenum error = glGetError())
+	{
+		std::cout << "[OpenGL Error] (" << error << ")" << std::endl;
+	}
+}
+
 Application::~Application()
 {
 	UnregisterClass(m_applicationName.c_str(), m_hInstance);
@@ -73,12 +89,6 @@ const bool Application::initialize(const wchar_t* className)
 						  WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 640, 480,
 						  0, m_hMenu, m_hInstance, 0);
 
-	m_renderer = std::make_shared<Renderer>();
-
-	if (!m_renderer->init(m_hWnd))
-	{
-		return false;
-	}
 
 #if _DEBUG == 1
 	//Initiate console for debugging
@@ -90,9 +100,14 @@ const bool Application::initialize(const wchar_t* className)
 	std::ofstream console_out("CONOUT$");
 	std::cout.rdbuf(console_out.rdbuf());
 
-	//Print version of OpenGL
-	std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
 #endif
+
+	m_renderer = std::make_shared<Renderer>();
+
+	if (!m_renderer->init(m_hWnd))
+	{
+		return false;
+	}
 
 	return true;
 }

@@ -2,79 +2,11 @@
 
 #include <GL/wglew.h>
 
-#include <iostream>
-#include <sstream>
-#include <fstream>
-#include <string>
-
 #include "Vendor/glm/glm.hpp"
 #include "Vendor/glm/gtc/matrix_transform.hpp"
 
-static unsigned int compileShader(unsigned int type, const std::string& source)
-{
-	unsigned int id = glCreateShader(type);
-	const char* src = source.c_str();
-
-	glShaderSource(id, 1, &src, nullptr);
-	glCompileShader(id);
-
-	int result;
-	glGetShaderiv(id, GL_COMPILE_STATUS, &result);
-	if (result == GL_FALSE)
-	{
-		int length;
-		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
-
-		char* message = (char*)alloca(length * sizeof(char));
-		glGetShaderInfoLog(id, length, &length, message);
-
-		std::cout << "Failed to compile " << (type == GL_VERTEX_SHADER ? "vertex" : "fragment") << std::endl;
-
-		std::cout << message << std::endl;
-
-		glDeleteShader(id);
-
-		return 0;
-	}
-
-	return id;
-}
-
-static unsigned int createShader(const std::string & vertexShader, const std::string & fragmentShader)
-{
-
-	unsigned int program = glCreateProgram();
-
-	unsigned int vs = compileShader(GL_VERTEX_SHADER, vertexShader);
-	unsigned int fs = compileShader(GL_FRAGMENT_SHADER, fragmentShader);
-
-	glAttachShader(program, vs);
-	glAttachShader(program, fs);
-	glLinkProgram(program);
-	glValidateProgram(program);
-
-	glDeleteShader(vs);
-	glDeleteShader(fs);
-
-	return program;
-}
-
-
-
-static const std::string parseShader(const std::string& filepath)
-{
-	std::ifstream stream(filepath);
-
-	std::string line;
-	std::stringstream ss;
-
-	while (std::getline(stream, line))
-	{
-		ss << line << '\n';
-	}
-
-	return ss.str();
-}
+#include <iostream>
+#include "Application.h"
 
 Renderer::~Renderer()
 {
@@ -86,7 +18,7 @@ const bool Renderer::init(HWND& hWnd)
 {
 	//Get windows Handle to device context
 	m_hdc = GetDC(hWnd);
-	
+
 	//Create a dummy context
 	m_deviceContext = wglCreateContext(m_hdc);
 
@@ -120,7 +52,7 @@ const bool Renderer::init(HWND& hWnd)
 
 	//If pixel chosen pixel format cannot be chosen, return false
 	if (!wglChoosePixelFormatARB(m_hdc, attribList, NULL, 1,
-								&pixelFormat, &numFormats))
+		&pixelFormat, &numFormats))
 	{
 		return false;
 	}
@@ -128,23 +60,45 @@ const bool Renderer::init(HWND& hWnd)
 	//Creating context with attributes
 	m_deviceContext = wglCreateContextAttribsARB(m_hdc, m_deviceContext, attribList);
 
-	unsigned int source = createShader(parseShader("Resources/VertexShader.glsl"), parseShader("Resources/FragmentShader.frag"));
-	glUseProgram(source);
+#if _DEBUG == 1
+	//Print version of OpenGL
+	std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
+#endif
 
 	//Create temporary vertex buffer
-	float positions[6] =
+	float positions[] =
 	{
 		-0.5f, -0.5f,
-		 0.0f,  0.5f,
-		 0.5f, -0.5f
+		 0.5f, -0.5f,
+		 0.5f,  0.5f,
+		-0.5f,  0.5f
 	};
 
-	m_vb = std::make_unique<VertexBuffer>(positions, 6 * 2 * sizeof(float));
+	unsigned int indices[] =
+	{
+		0, 1 ,2,
+		2, 3, 0
+	};
 
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
+	unsigned int m_vao;
+	glGenVertexArrays(1, &m_vao);
+	glBindVertexArray(m_vao);
 
-	
+	m_va = std::make_unique<VertexArray>();
+	VertexBuffer vb = VertexBuffer(positions, 4 * 2 * sizeof(float));
+
+	VertexBufferLayout layout;
+	layout.push<float>(2);
+	m_va->addBuffer(vb, layout);
+
+	m_ibo = std::make_unique<IndexBuffer>(indices, 6);
+
+	m_shader = std::make_unique<Shader>("Resources/Shaders/VertexShader.glsl", "Resources/Shaders/FragmentShader.frag");
+
+	glBindVertexArray(0);
+	glUseProgram(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	//If all initalization suceeded return true
 	return true;
@@ -155,9 +109,14 @@ void Renderer::draw(HDC& dc)
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	
+	m_shader->bind();
+	m_shader->setUniform4f("u_colour", 0.8f, 0.3f, 0.8f, 1.0f);
+
+	m_va->bind();
+	m_ibo->bind();
+
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
 	SwapBuffers(m_hdc);
 }
-
-

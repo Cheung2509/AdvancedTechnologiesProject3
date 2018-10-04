@@ -139,14 +139,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp" />
+    <ClCompile Include="Source\IndexBuffer.cpp" />
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\Renderer.cpp" />
+    <ClCompile Include="Source\Shader.cpp" />
     <ClCompile Include="Source\Vendor\glm\detail\glm.cpp" />
+    <ClCompile Include="Source\VertexArray.cpp" />
     <ClCompile Include="Source\VertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h" />
+    <ClInclude Include="Source\IndexBuffer.h" />
     <ClInclude Include="Source\Renderer.h" />
+    <ClInclude Include="Source\Shader.h" />
     <ClInclude Include="Source\Vendor\glm\common.hpp" />
     <ClInclude Include="Source\Vendor\glm\detail\compute_common.hpp" />
     <ClInclude Include="Source\Vendor\glm\detail\compute_vector_relational.hpp" />
@@ -385,11 +390,13 @@
     <ClInclude Include="Source\Vendor\glm\vec3.hpp" />
     <ClInclude Include="Source\Vendor\glm\vec4.hpp" />
     <ClInclude Include="Source\Vendor\glm\vector_relational.hpp" />
+    <ClInclude Include="Source\VertexArray.h" />
     <ClInclude Include="Source\VertexBuffer.h" />
+    <ClInclude Include="Source\VertexBufferLayout.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="FragmentShader.frag" />
-    <None Include="Resources\VertexShader.glsl" />
+    <None Include="Resources\Shaders\VertexShader.glsl" />
     <None Include="Source\Vendor\glm\detail\func_common.inl" />
     <None Include="Source\Vendor\glm\detail\func_common_simd.inl" />
     <None Include="Source\Vendor\glm\detail\func_exponential.inl" />

@@ -30,6 +30,15 @@
     <ClCompile Include="Source\Vendor\glm\detail\glm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\IndexBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\VertexArray.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -755,11 +764,20 @@
     <ClInclude Include="Source\Vendor\glm\vector_relational.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\IndexBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\VertexArray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\VertexBufferLayout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\VertexShader.glsl">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="FragmentShader.frag">
       <Filter>Resource Files</Filter>
     </None>
@@ -1149,6 +1167,9 @@
     </None>
     <None Include="Source\Vendor\glm\gtx\wrap.inl">
       <Filter>Header Files</Filter>
+    </None>
+    <None Include="Resources\Shaders\VertexShader.glsl">
+      <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
 </Project>
