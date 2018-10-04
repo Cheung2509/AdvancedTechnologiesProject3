@@ -74,8 +74,6 @@ const bool Renderer::init(HWND& hWnd)
 	return true;
 }
 
-
-
 void Renderer::clear() const
 {
 	glClear(GL_COLOR_BUFFER_BIT);
