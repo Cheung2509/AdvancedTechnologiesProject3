@@ -2,8 +2,9 @@
 
 #if _DEBUG == 1
 #include <iostream>
-#include <fstream>
 #endif
+
+#include <fstream>
 
 Application::~Application()
 {
