@@ -6,6 +6,7 @@
 class Shader
 {
 public:
+	Shader() = default;
 	Shader(const std::string& vs, const std::string& fs);
 	~Shader();
 

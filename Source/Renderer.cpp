@@ -12,6 +12,7 @@
 #include "VertexArray.h"
 #include "IndexBuffer.h"
 #include "Shader.h"
+#include "ErrorHandler.h"
 
 Renderer::~Renderer()
 {
@@ -39,36 +40,23 @@ const bool Renderer::init(HWND& hWnd)
 		return false;
 	}
 
-	//Create attribute list for pixel format
-	const int attribList[] =
-	{
-		WGL_DRAW_TO_WINDOW_ARB, GL_TRUE,
-		WGL_SUPPORT_OPENGL_ARB, GL_TRUE,
-		WGL_DOUBLE_BUFFER_ARB, GL_TRUE,
-		WGL_PIXEL_TYPE_ARB, WGL_TYPE_RGBA_ARB,
-		WGL_COLOR_BITS_ARB, 32,
-		WGL_DEPTH_BITS_ARB, 24,
-		WGL_STENCIL_BITS_ARB, 8,
-		0, // End
-	};
-
-	int pixelFormat;
-	UINT numFormats;
-
-	//If pixel chosen pixel format cannot be chosen, return false
-	if (!wglChoosePixelFormatARB(hdc, attribList, NULL, 1,
-		&pixelFormat, &numFormats))
-	{
-		return false;
-	}
-
-	//Creating context with attributes
-	m_deviceContext = wglCreateContextAttribsARB(hdc, m_deviceContext, attribList);
-
 #if _DEBUG == 1
 	//Print version of OpenGL
 	std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
 #endif
+
+	//Enable OpenGL options 
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	glFrontFace(GL_CCW);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	//If all initalization suceeded return true
 	return true;
@@ -76,15 +64,13 @@ const bool Renderer::init(HWND& hWnd)
 
 void Renderer::clear() const
 {
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
-void Renderer::draw(const VertexArray & va, const IndexBuffer& ib, const Shader & shader, HDC hdc)
+void Renderer::draw(const VertexArray & va, const IndexBuffer& ib, const Shader & shader)
 {
 	shader.bind();
 	va.bind();
 	ib.bind();
 	glDrawElements(GL_TRIANGLES, ib.getCount(), GL_UNSIGNED_INT, nullptr);
-
-	//SwapBuffers(hdc);
 }

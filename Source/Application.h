@@ -12,7 +12,7 @@
 #include <string>
 #include <memory>
 
-#include "Renderer.h"
+#include "Game.h"
 
 class Application
 {
@@ -31,6 +31,8 @@ private:
 	static HINSTANCE m_hInstance;
 	HWND m_hWnd;
 	HMENU m_hMenu;
+	HDC m_hdc;
 
-	std::shared_ptr<Renderer> m_renderer;
+	std::shared_ptr<Renderer> m_renderer = nullptr;
+	Game m_game;
 };

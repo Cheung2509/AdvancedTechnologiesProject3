@@ -139,6 +139,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp" />
+    <ClCompile Include="Source\Game.cpp" />
     <ClCompile Include="Source\IndexBuffer.cpp" />
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\Renderer.cpp" />
@@ -149,6 +150,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h" />
+    <ClInclude Include="Source\ErrorHandler.h" />
+    <ClInclude Include="Source\Game.h" />
+    <ClInclude Include="Source\GameObject3D.h" />
     <ClInclude Include="Source\IndexBuffer.h" />
     <ClInclude Include="Source\Renderer.h" />
     <ClInclude Include="Source\Shader.h" />
@@ -396,6 +400,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="FragmentShader.frag" />
+    <None Include="Resources\Shaders\FragmentShader.frag" />
     <None Include="Resources\Shaders\VertexShader.glsl" />
     <None Include="Source\Vendor\glm\detail\func_common.inl" />
     <None Include="Source\Vendor\glm\detail\func_common_simd.inl" />

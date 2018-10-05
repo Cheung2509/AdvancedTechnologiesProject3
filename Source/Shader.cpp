@@ -1,6 +1,8 @@
+
 #include "Shader.h"
 
 #include "GL/glew.h"
+#include "ErrorHandler.h"
 
 #include <fstream>
 #include <iostream>
@@ -88,9 +90,9 @@ unsigned int Shader::compileShader(unsigned int type, const std::string& source)
 
 	int result;
 	glGetShaderiv(id, GL_COMPILE_STATUS, &result);
+	
 	if (result == GL_FALSE)
 	{
-#if _DEBUG == 1
 		int length;
 		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
 
@@ -104,7 +106,6 @@ unsigned int Shader::compileShader(unsigned int type, const std::string& source)
 		glDeleteShader(id);
 
 		
-#endif
 		return 0;
 	}
 

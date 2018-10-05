@@ -9,22 +9,7 @@
 #include "VertexArray.h"
 #include "IndexBuffer.h"
 #include "Shader.h"
-
-static void GLClearError()
-{
-	while (glGetError() != GL_NO_ERROR)
-	{
-
-	}
-}
-
-static void GLCheckError()
-{
-	while (GLenum error = glGetError())
-	{
-		std::cout << "[OpenGL Error] (" << error << ")" << std::endl;
-	}
-}
+#include "ErrorHandler.h"
 
 Application::~Application()
 {
@@ -93,6 +78,7 @@ const bool Application::initialize(const wchar_t* className)
 						  WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 640, 480,
 						  0, m_hMenu, m_hInstance, 0);
 
+	m_hdc = GetDC(m_hWnd);
 
 #if _DEBUG == 1
 	//Initiate console for debugging
@@ -103,15 +89,12 @@ const bool Application::initialize(const wchar_t* className)
 
 	std::ofstream console_out("CONOUT$");
 	std::cout.rdbuf(console_out.rdbuf());
-
 #endif
-
+	 
 	m_renderer = std::make_shared<Renderer>();
+	m_renderer->init(m_hWnd);
 
-	if (!m_renderer->init(m_hWnd))
-	{
-		return false;
-	}
+	m_game.init();
 
 	return true;
 }
@@ -127,38 +110,6 @@ const bool Application::run()
 	msg.message = WM_NULL;
 	PeekMessage(&msg, NULL, 0U, 0U, PM_NOREMOVE);
 
-	//Create temporary vertex buffer
-	float positions[] =
-	{
-		-0.5f, -0.5f,
-		 0.5f, -0.5f,
-		 0.5f,  0.5f,
-		-0.5f,  0.5f
-	};
-
-	unsigned int indices[] =
-	{
-		0, 1 ,2,
-		2, 3, 0
-	};
-
-	unsigned int m_vao;
-	glGenVertexArrays(1, &m_vao);
-	glBindVertexArray(m_vao);
-
-	VertexArray m_va;
-	VertexBuffer vb = VertexBuffer(positions, 4 * 2 * sizeof(float));
-
-	VertexBufferLayout layout;
-	layout.push<float>(2);
-	m_va.addBuffer(vb, layout);
-
-	IndexBuffer m_ibo = IndexBuffer(indices, 6);
-
-	Shader m_shader = Shader("Resources/Shaders/VertexShader.glsl", "Resources/Shaders/FragmentShader.frag");
-
-
-
 	while (WM_QUIT != msg.message)
 	{
 		// Process window events.
@@ -172,16 +123,10 @@ const bool Application::run()
 			DispatchMessage(&msg);
 		}
 		else
-		{
-			HDC dc = GetDC(m_hWnd);
-			
-			m_shader.setUniform4f("u_colour", 1.0f, 0.0f, 0.0f, 1.0f);
+		{	
+			m_game.draw(m_renderer);
 
-			m_renderer->clear();
-			m_renderer->draw(m_va, m_ibo, m_shader, dc);
-			
-			
-			SwapBuffers(dc);
+			SwapBuffers(m_hdc);
 		}
 	}
 

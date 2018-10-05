@@ -22,7 +22,7 @@ public:
 	const bool init(HWND& hWnd);
 
 	void clear() const;
-	void draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader, HDC hdc);
+	void draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader);
 
 	const HGLRC& getContext() const { return m_deviceContext; }
 private:
