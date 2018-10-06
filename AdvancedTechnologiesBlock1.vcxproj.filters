@@ -51,6 +51,18 @@
     <ClCompile Include="Source\IndexBuffer.cpp">
       <Filter>Source Files\Vertex</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Cube.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObject3D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Timer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -797,11 +809,23 @@
     <ClInclude Include="Source\GameObject3D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Cube.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DrawData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="FragmentShader.frag">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="Resources\Shaders\VertexShader.glsl">
       <Filter>Resource Files</Filter>
     </None>
@@ -1192,6 +1216,8 @@
     <None Include="Source\Vendor\glm\gtc\round.inl">
       <Filter>GLM</Filter>
     </None>
-    <None Include="Resources\Shaders\FragmentShader.frag" />
+    <None Include="Resources\Shaders\FragmentShader.frag">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

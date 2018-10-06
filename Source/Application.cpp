@@ -10,6 +10,7 @@
 #include "IndexBuffer.h"
 #include "Shader.h"
 #include "ErrorHandler.h"
+#include "Timer.h"
 
 Application::~Application()
 {
@@ -101,6 +102,8 @@ const bool Application::initialize(const wchar_t* className)
 
 const bool Application::run()
 {
+	Timer timer;
+
 	if (!IsWindowVisible(m_hWnd))
 		ShowWindow(m_hWnd, SW_SHOW);
 
@@ -124,6 +127,7 @@ const bool Application::run()
 		}
 		else
 		{	
+			m_game.tick(timer.mark());
 			m_game.draw(m_renderer);
 
 			SwapBuffers(m_hdc);

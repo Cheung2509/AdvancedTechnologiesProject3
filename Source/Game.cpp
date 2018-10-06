@@ -4,50 +4,33 @@
 
 bool Game::init()
 {
+	m_cube = std::make_unique<Cube>();
+	m_cube->init();
+	m_cube->setPos(glm::vec3(0.0f, 0.0f, 0.0f));
 
-	//Create temporary vertex buffer
-	float positions[] =
-	{
-		-0.5f, -0.5f,
-		 0.5f, -0.5f,
-		 0.5f,  0.5f,
-		-0.5f,  0.5f
-	};
+	m_gameData = std::make_unique<GameData>();
 
-	unsigned int indices[] =
-	{
-		0, 1 ,2,
-		2, 3, 0
-	};
+	m_drawData = std::make_unique<DrawData>();
+	m_drawData->m_camera = std::make_shared<Camera>(glm::radians(45.0f), 640.0f / 480.0f, 0.1f, 100.0f);
 
-	unsigned int m_vao;
-	glGenVertexArrays(1, &m_vao);
-	glBindVertexArray(m_vao);
-
-	m_va = std::make_unique<VertexArray>();
-	m_va->init();
-
-	m_vb = std::make_unique<VertexBuffer>(positions, 4 * 2 * sizeof(float));
-	VertexBufferLayout layout;
-	layout.push<float>(2);
-	m_va->addBuffer(*m_vb, layout);
-
-	m_ibo = std::make_unique<IndexBuffer>(indices, 6);
-
-	m_shader = std::make_unique<Shader>("Resources/Shaders/VertexShader.glsl", "Resources/Shaders/FragmentShader.frag");
+	m_drawData->m_camera->setPos(glm::vec3(4.0f, 3.0f, 3.0f));
 
 	return true;
 }
 
-void Game::tick()
+void Game::tick(const float& deltaTime)
 {
+	m_gameData->m_deltaTime = deltaTime;
+
+	m_drawData->m_camera->tick(m_gameData.get());
+
+	m_cube->tick(m_gameData.get());
 }
+
 
 void Game::draw(std::shared_ptr<Renderer> renderer)
 {
-	m_shader->setUniform4f("u_colour", r, 0.3f, 0.8f, 1.0f);
-
 	renderer->clear();
 
-	renderer->draw(*m_va, *m_ibo, *m_shader);
+	m_cube->draw(m_drawData.get());
 }

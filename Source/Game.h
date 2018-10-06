@@ -4,6 +4,9 @@
 #include "VertexArray.h"
 #include "Shader.h"
 #include "IndexBuffer.h"
+#include "GameData.h"
+#include "DrawData.h"
+#include "Cube.h"
 
 class Game
 {
@@ -13,15 +16,10 @@ public:
 
 	bool init();
 
-	void tick();
+	void tick(const float& deltaTime);
 	void draw(std::shared_ptr<Renderer> renderer);
 private:
-
-	std::unique_ptr<VertexArray> m_va;
-	std::unique_ptr<VertexBuffer> m_vb;
-	std::unique_ptr<IndexBuffer> m_ibo;
-	std::unique_ptr<Shader> m_shader;
-
-	float r = 0;
-	float increment = 0.05;
+	std::unique_ptr<DrawData> m_drawData;
+	std::unique_ptr<GameData> m_gameData;
+	std::unique_ptr<Cube> m_cube;
 };
