@@ -6,7 +6,6 @@
 #include "IndexBuffer.h"
 #include "GameData.h"
 #include "DrawData.h"
-#include "Cube.h"
 
 class Game
 {
@@ -21,5 +20,6 @@ public:
 private:
 	std::unique_ptr<DrawData> m_drawData;
 	std::unique_ptr<GameData> m_gameData;
-	std::unique_ptr<Cube> m_cube;
+
+	std::vector<std::unique_ptr<GameObject3D>> m_gameObjects;
 };

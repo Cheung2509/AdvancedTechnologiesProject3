@@ -38,6 +38,7 @@ public:
 		m_yaw = newYaw;
 		m_roll = newRoll;
 	}
+
 protected:
 	glm::vec3 m_pos;
 	glm::vec3 m_scale;

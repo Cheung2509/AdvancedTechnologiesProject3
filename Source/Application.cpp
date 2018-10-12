@@ -115,23 +115,16 @@ const bool Application::run()
 
 	while (WM_QUIT != msg.message)
 	{
-		// Process window events.
-		// Use PeekMessage() so we can use idle time to render the scene.
-		bGotMsg = (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE) != 0);
-
-		if (bGotMsg)
+		while(PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE))
 		{
 			// Translate and dispatch the message
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-		else
-		{	
-			m_game.tick(timer.mark());
-			m_game.draw(m_renderer);
+		m_game.tick(timer.mark());
+		m_game.draw(m_renderer);
 
-			SwapBuffers(m_hdc);
-		}
+		SwapBuffers(m_hdc);
 	}
 
 	return true;
@@ -170,7 +163,6 @@ LRESULT Application::staticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 
 		break;
 	}
-
 	case WM_CLOSE:
 	{
 		if (hWnd != NULL)
@@ -179,9 +171,30 @@ LRESULT Application::staticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 		}
 		return 0;
 	}
-
 	case WM_DESTROY:
 		PostQuitMessage(0);
+		break;
+
+	//Keyboard Messages
+	case WM_KEYDOWN:
+		break;
+	case WM_KEYUP:
+		break;
+	case WM_CHAR:
+		break;
+
+	//Mouse Messages
+	case WM_MOUSEMOVE:
+		break;
+	case WM_LBUTTONDOWN:
+		break;
+	case WM_RBUTTONDOWN:
+		break;
+	case WM_LBUTTONUP:
+		break;
+	case WM_RBUTTONUP:
+		break;
+	case WM_MOUSEWHEEL:
 		break;
 	}
 
