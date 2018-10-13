@@ -16,6 +16,12 @@ GameObject3D::~GameObject3D()
 
 void GameObject3D::tick(GameData * gameData)
 {	
+	m_rotationMatrix = glm::mat4(1.0f);
+	m_rotationMatrix = glm::rotate(m_rotationMatrix, m_pitch, glm::vec3(1.0f, 0.0f, 0.0f));
+	m_rotationMatrix = glm::rotate(m_rotationMatrix, m_yaw, glm::vec3(0.0f, 1.0f, 0.0f));
+	m_rotationMatrix = glm::rotate(m_rotationMatrix, m_roll, glm::vec3(0.0f, 0.0f, 1.0f));
+
+
 	glm::mat4 translationMat = glm::translate(glm::mat4(1.0f), m_pos);
 	glm::mat4 scaleMat = glm::scale(glm::mat4(1.0f), m_scale);
 

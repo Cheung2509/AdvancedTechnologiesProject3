@@ -2,6 +2,9 @@
 
 #include "glm/gtc/matrix_transform.hpp"
 
+#include "Keyboard.h"
+#include "GameData.h"
+
 #include <Windows.h>
 
 Camera::Camera()

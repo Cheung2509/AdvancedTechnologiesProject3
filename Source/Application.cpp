@@ -11,6 +11,7 @@
 #include "Shader.h"
 #include "ErrorHandler.h"
 #include "Timer.h"
+#include "Keyboard.h"
 
 Application::~Application()
 {
@@ -108,7 +109,6 @@ const bool Application::run()
 		ShowWindow(m_hWnd, SW_SHOW);
 
 	// The render loop is controlled here.
-	bool bGotMsg;
 	MSG  msg;
 	msg.message = WM_NULL;
 	PeekMessage(&msg, NULL, 0U, 0U, PM_NOREMOVE);
@@ -177,10 +177,16 @@ LRESULT Application::staticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 
 	//Keyboard Messages
 	case WM_KEYDOWN:
+		if (!(lParam & 0x40000000) || Keyboard::getInstance()->autoRepeatIsEnabled())
+		{
+			Keyboard::getInstance()->onKeyPressed(static_cast<unsigned char>(wParam));
+		}
 		break;
 	case WM_KEYUP:
+		Keyboard::getInstance()->onKeyReleased(static_cast<unsigned char>(wParam));
 		break;
 	case WM_CHAR:
+		Keyboard::getInstance()->onChar(static_cast<unsigned char>(wParam));
 		break;
 
 	//Mouse Messages

@@ -35,4 +35,4 @@ private:
 
 	std::shared_ptr<Renderer> m_renderer = nullptr;
 	Game m_game;
-};
+}; 

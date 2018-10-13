@@ -68,7 +68,6 @@ void Cube::init()
 
 void Cube::tick(GameData * gameData)
 {
-	m_rotationMatrix = glm::rotate(m_rotationMatrix, 1.0f * gameData->m_deltaTime, glm::vec3(1.0f, 1.0f, 0.0f));
 	GameObject3D::tick(gameData);
 }
 

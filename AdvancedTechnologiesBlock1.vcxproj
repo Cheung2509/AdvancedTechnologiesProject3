@@ -144,6 +144,7 @@
     <ClCompile Include="Source\Game.cpp" />
     <ClCompile Include="Source\GameObject3D.cpp" />
     <ClCompile Include="Source\IndexBuffer.cpp" />
+    <ClCompile Include="Source\Keyboard.cpp" />
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\Renderer.cpp" />
     <ClCompile Include="Source\Shader.cpp" />
@@ -153,6 +154,7 @@
     <ClCompile Include="Source\VertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Keyboard.h" />
     <ClInclude Include="Source\Model.h" />
     <ClInclude Include="Source\Application.h" />
     <ClInclude Include="Source\Camera.h" />
