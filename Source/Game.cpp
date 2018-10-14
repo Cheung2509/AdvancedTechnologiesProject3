@@ -23,7 +23,7 @@ bool Game::init()
 	return true;
 }
 
-void Game::tick(const float& deltaTime, Keyboard& keyboard)
+void Game::tick(const float& deltaTime, const Keyboard& keyboard)
 {
 	m_gameData->m_deltaTime = deltaTime;
 	m_gameData->keyboard = keyboard;

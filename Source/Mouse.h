@@ -8,7 +8,7 @@
 class Mouse
 {
 public:
-	friend class Application;
+	friend class Window;
 	class Event
 	{
 	public:
