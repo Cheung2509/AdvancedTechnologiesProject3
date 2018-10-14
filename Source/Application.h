@@ -13,6 +13,7 @@
 #include <memory>
 
 #include "Game.h"
+#include "Mouse.h"
 
 class Application
 {
@@ -24,8 +25,13 @@ public:
 
 	const bool run();
 
-	static LRESULT CALLBACK staticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam,
+private:
+	static LRESULT WINAPI staticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam,
 											 LPARAM lParam);
+	static LRESULT WINAPI handleThunk(HWND hWnd, UINT uMsg, WPARAM wParam,
+									  LPARAM lParam);
+	LRESULT handleMsg(HWND hWnd, UINT uMsg, WPARAM wParam,
+					  LPARAM lParam);
 private:
 	static std::wstring m_applicationName;
 	static HINSTANCE m_hInstance;
@@ -34,5 +40,7 @@ private:
 	HDC m_hdc;
 
 	std::shared_ptr<Renderer> m_renderer = nullptr;
+	Keyboard m_keyboard;
+	Mouse m_mouse;
 	Game m_game;
 }; 

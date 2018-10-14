@@ -2,6 +2,7 @@
 
 #include "DrawData.h"
 #include "GameData.h"
+#include "Key.h"
 
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -68,12 +69,16 @@ void Cube::init()
 
 void Cube::tick(GameData * gameData)
 {
+	if (gameData->keyboard.keyIsPressed(Key::KEY_D))
+	{
+		m_yaw += 1.0f * gameData->m_deltaTime;
+	}
+
 	GameObject3D::tick(gameData);
 }
 
 void Cube::draw(DrawData* drawData)
 {
-
 	glm::mat4 mvp = drawData->m_camera->getProjection() * drawData->m_camera->getView() *
 		m_worldMatrix;
 

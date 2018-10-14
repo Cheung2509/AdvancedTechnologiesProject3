@@ -6,6 +6,7 @@
 #include "IndexBuffer.h"
 #include "GameData.h"
 #include "DrawData.h"
+#include "Keyboard.h"
 
 class Game
 {
@@ -15,7 +16,7 @@ public:
 
 	bool init();
 
-	void tick(const float& deltaTime);
+	void tick(const float& deltaTime, Keyboard& keyboard);
 	void draw(std::shared_ptr<Renderer> renderer);
 private:
 	std::unique_ptr<DrawData> m_drawData;

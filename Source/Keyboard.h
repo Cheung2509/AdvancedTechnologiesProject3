@@ -47,10 +47,7 @@ public:
 	void flushChar();
 	void flushKey();
 
-	static std::shared_ptr<Keyboard> getInstance();
-
 private:
-	
 	void onKeyPressed(unsigned char keyCode);
 	void onKeyReleased(unsigned char keyCode);
 	void onChar(unsigned char character);
@@ -64,7 +61,5 @@ private:
 	std::bitset<nKeys> m_keyStates;
 	std::queue<Event> m_keyBuffer;
 	std::queue<char> m_charBuffer;
-
-	static std::shared_ptr<Keyboard> instance;
 };
 

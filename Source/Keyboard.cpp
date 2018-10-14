@@ -1,7 +1,5 @@
 #include "Keyboard.h"
 
-std::shared_ptr<Keyboard> Keyboard::instance = nullptr;
-
 bool Keyboard::keyIsPressed(unsigned char keyCode) const
 {
 	return m_keyStates[keyCode];
@@ -60,16 +58,6 @@ void Keyboard::flushChar()
 void Keyboard::flushKey()
 {
 	m_keyBuffer = std::queue<Event>();
-}
-
-std::shared_ptr<Keyboard> Keyboard::getInstance()
-{
-	if (!instance)
-	{
-		instance = std::make_shared<Keyboard>();
-	}
-
-	return instance;
 }
 
 void Keyboard::onKeyPressed(unsigned char keyCode)

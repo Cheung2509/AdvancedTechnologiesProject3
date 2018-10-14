@@ -5,6 +5,7 @@
 #endif
 
 #include <fstream>
+#include <WinUser.h>
 
 #include "VertexArray.h"
 #include "IndexBuffer.h"
@@ -58,9 +59,9 @@ const bool Application::initialize(const wchar_t* className)
 	//Registering Window class
 	WNDCLASS wndClass = {};
 	wndClass.style = CS_OWNDC;
-	wndClass.lpfnWndProc = Application::staticWindowProc;
+	wndClass.lpfnWndProc = staticWindowProc;
 	wndClass.cbClsExtra = 0;
-	wndClass.cbWndExtra = 0;
+	wndClass.cbWndExtra = sizeof(Application*);
 	wndClass.hInstance = m_hInstance;
 	wndClass.hIcon = hIcon;
 	wndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
@@ -78,8 +79,8 @@ const bool Application::initialize(const wchar_t* className)
 
 	m_hWnd = CreateWindow(m_applicationName.c_str(), m_applicationName.c_str(),
 						  WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 640, 480,
-						  0, m_hMenu, m_hInstance, 0);
-
+						  0, m_hMenu, m_hInstance, this);
+	
 	m_hdc = GetDC(m_hWnd);
 
 #if _DEBUG == 1
@@ -121,7 +122,7 @@ const bool Application::run()
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-		m_game.tick(timer.mark());
+		m_game.tick(timer.mark(), m_keyboard);
 		m_game.draw(m_renderer);
 
 		SwapBuffers(m_hdc);
@@ -130,11 +131,10 @@ const bool Application::run()
 	return true;
 }
 
-LRESULT Application::staticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT WINAPI Application::staticWindowProc(HWND hWnd,UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	switch (uMsg)
-	{
-	case WM_CREATE:
+
+	if(uMsg == WM_CREATE)
 	{
 		PIXELFORMATDESCRIPTOR pfd =
 		{
@@ -160,9 +160,33 @@ LRESULT Application::staticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 
 		int windowPixelFormat = ChoosePixelFormat(windowHandleToDC, &pfd);
 		SetPixelFormat(windowHandleToDC, windowPixelFormat, &pfd);
+		
+		CREATESTRUCT* pcs = (CREATESTRUCT*)lParam;
+		Application* const pWnd = reinterpret_cast<Application*>(pcs->lpCreateParams);
 
-		break;
+		assert(pWnd != nullptr);
+		
+		SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)pWnd);
+		SetWindowLongPtr(hWnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&Application::handleThunk));
+
+		return pWnd->handleMsg(hWnd, uMsg, wParam, lParam);
 	}
+	
+
+	return DefWindowProc(hWnd, uMsg, wParam, lParam);
+}
+
+LRESULT __stdcall Application::handleThunk(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	Application* const pWnd = reinterpret_cast<Application*>(GetWindowLongPtrW(hWnd, GWLP_USERDATA));
+
+	return pWnd->handleMsg(hWnd, uMsg, wParam, lParam);
+}
+
+LRESULT Application::handleMsg(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	switch (uMsg)
+	{
 	case WM_CLOSE:
 	{
 		if (hWnd != NULL)
@@ -175,32 +199,52 @@ LRESULT Application::staticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 		PostQuitMessage(0);
 		break;
 
-	//Keyboard Messages
+		//Keyboard Messages
 	case WM_KEYDOWN:
-		if (!(lParam & 0x40000000) || Keyboard::getInstance()->autoRepeatIsEnabled())
+		if (!(lParam & 0x40000000) || m_keyboard.autoRepeatIsEnabled())
 		{
-			Keyboard::getInstance()->onKeyPressed(static_cast<unsigned char>(wParam));
+			m_keyboard.onKeyPressed(static_cast<unsigned char>(wParam));
 		}
 		break;
 	case WM_KEYUP:
-		Keyboard::getInstance()->onKeyReleased(static_cast<unsigned char>(wParam));
+		m_keyboard.onKeyReleased(static_cast<unsigned char>(wParam));
 		break;
 	case WM_CHAR:
-		Keyboard::getInstance()->onChar(static_cast<unsigned char>(wParam));
+		m_keyboard.onChar(static_cast<unsigned char>(wParam));
 		break;
 
-	//Mouse Messages
+		//Mouse Messages
 	case WM_MOUSEMOVE:
+	{
+		int x = LOWORD(lParam);
+		int y = HIWORD(lParam);
+
+
+	}
 		break;
 	case WM_LBUTTONDOWN:
+	{
+		m_mouse.onLeftPressed(LOWORD(lParam), HIWORD(lParam));
+	}
 		break;
 	case WM_RBUTTONDOWN:
+		m_mouse.onRightPressed(LOWORD(lParam), HIWORD(lParam));
 		break;
 	case WM_LBUTTONUP:
+		m_mouse.onLeftPressed(LOWORD(lParam), HIWORD(lParam));
 		break;
 	case WM_RBUTTONUP:
+		m_mouse.onLeftReleased(LOWORD(lParam), HIWORD(lParam));
 		break;
 	case WM_MOUSEWHEEL:
+		if (GET_WHEEL_DELTA_WPARAM(wParam) > 0)
+		{
+			m_mouse.onWheelUp(LOWORD(lParam), HIWORD(lParam));
+		}
+		else if (GET_WHEEL_DELTA_WPARAM(wParam) < 0)
+		{
+			m_mouse.onWhelDown(LOWORD(lParam), HIWORD(lParam));
+		}
 		break;
 	}
 
