@@ -56,7 +56,7 @@ const bool Application::run()
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-		m_game.tick(timer.mark(), m_window.getKeyboard());
+		m_game.tick(timer.mark(), m_window.getKeyboard(), m_window.getMouse());
 		m_game.draw(m_renderer);
 
 		SwapBuffers(m_window.getHDC());

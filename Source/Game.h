@@ -16,7 +16,7 @@ public:
 
 	bool init();
 
-	void tick(const float& deltaTime, const Keyboard& keyboard);
+	void tick(const float& deltaTime, const Keyboard& keyboard, const Mouse& );
 	void draw(std::shared_ptr<Renderer> renderer);
 private:
 	std::unique_ptr<DrawData> m_drawData;
