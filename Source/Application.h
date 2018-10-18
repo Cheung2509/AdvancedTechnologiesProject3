@@ -20,6 +20,8 @@ public:
 	const bool initialize(const wchar_t* className = L"No Name");
 
 	const bool run();
+
+	MSG processMessage();
 private:
 	std::shared_ptr<Renderer> m_renderer = nullptr;
 	Window m_window;

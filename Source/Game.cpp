@@ -5,13 +5,20 @@
 
 bool Game::init()
 {
+	std::shared_ptr<Shader> shader = std::make_shared<Shader>
+		("Resources/Shaders/VertexShader.glsl", "Resources/Shaders/FragmentShader.frag");
 
-	auto m_cube = std::make_unique<Cube>();
-	m_cube->init();
-	m_cube->setPos(glm::vec3(0.0f, 0.0f, 0.0f));
-	m_cube->setScale(glm::vec3(1.0f,1.0f,1.0f));
-	m_gameObjects.push_back(std::move(m_cube));
-
+	for (int x = 0; x < 10; x++)
+	{
+		for (int z = 0; z < 10; z++)
+		{
+			auto m_cube = std::make_unique<Cube>();
+			m_cube->init(shader);
+			m_cube->setPos(glm::vec3(x, 0.0f, z));
+			m_cube->setScale(glm::vec3(0.1f, 0.1f, 0.1f));
+			m_gameObjects.push_back(std::move(m_cube));
+		}
+	}
 
 	m_gameData = std::make_unique<GameData>();
 

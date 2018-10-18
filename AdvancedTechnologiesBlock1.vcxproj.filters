@@ -22,23 +22,26 @@
     <Filter Include="Source Files\Vertex">
       <UniqueIdentifier>{3a14d079-b5c5-4e10-9e80-da6a25eb97a0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Framework">
+      <UniqueIdentifier>{ac3055e1-31d1-4add-b818-70d939122f5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Framework">
+      <UniqueIdentifier>{5fdc40f9-a007-4beb-92c0-6e5a84b69abf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Framework\Input">
+      <UniqueIdentifier>{1c98636c-d129-464d-b35d-0ea894cbfad6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Framework\Input">
+      <UniqueIdentifier>{41975071-0ce8-45e5-a2d3-9d2f5660fd92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game">
+      <UniqueIdentifier>{b0cecc95-fa54-4549-9c03-a7bdf115892f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game">
+      <UniqueIdentifier>{bc6af50d-ac70-45f6-9e44-e9d11d9d2876}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Application.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Renderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Shader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Vendor\glm\detail\glm.cpp">
       <Filter>GLM</Filter>
     </ClCompile>
@@ -51,44 +54,47 @@
     <ClCompile Include="Source\IndexBuffer.cpp">
       <Filter>Source Files\Vertex</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Camera.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Source\Application.cpp">
+      <Filter>Source Files\Framework</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Cube.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Source\Main.cpp">
+      <Filter>Source Files\Framework</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GameObject3D.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Timer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Keyboard.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Mouse.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Source\Renderer.cpp">
+      <Filter>Source Files\Framework</Filter>
     </ClCompile>
     <ClCompile Include="Source\Window.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Mouse.cpp">
+      <Filter>Source Files\Framework\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Keyboard.cpp">
+      <Filter>Source Files\Framework\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Shader.cpp">
+      <Filter>Source Files\Vertex</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Camera.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Cube.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObject3D.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Timer.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\VBO.cpp">
+      <Filter>Source Files\Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Application.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Renderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Shader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ErrorHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Vendor\glm\detail\_features.hpp">
       <Filter>GLM</Filter>
     </ClInclude>
@@ -815,38 +821,59 @@
     <ClInclude Include="Source\VertexBuffer.h">
       <Filter>Header Files\Vertex</Filter>
     </ClInclude>
-    <ClInclude Include="Source\GameObject3D.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Source\ErrorHandler.h">
+      <Filter>Header Files\Framework</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Cube.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DrawData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Timer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Model.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Keyboard.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Key.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Mouse.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Source\Application.h">
+      <Filter>Header Files\Framework</Filter>
     </ClInclude>
     <ClInclude Include="Source\Window.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Timer.h">
+      <Filter>Header Files\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Renderer.h">
+      <Filter>Header Files\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Mouse.h">
+      <Filter>Header Files\Framework\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Keyboard.h">
+      <Filter>Header Files\Framework\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Key.h">
+      <Filter>Header Files\Framework\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Shader.h">
+      <Filter>Header Files\Vertex</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Camera.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Cube.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DrawData.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameData.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObject3D.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Model.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Plane.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\VBO.h">
+      <Filter>Header Files\Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

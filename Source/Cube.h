@@ -1,24 +1,18 @@
 #pragma once
 
-#include "GameObject3D.h"
-#include "VertexArray.h"
-#include "VertexBuffer.h"
-#include "IndexBuffer.h"
-#include "Shader.h"
+#include "VBO.h"
 
-class Cube : public GameObject3D
+class Cube : public VBO
 {
 public:
 	Cube();
 	~Cube();
 
 	void init();
+	virtual void init(std::string vertexShader, std::string fragmentShader) override;
+	virtual void init(std::shared_ptr<Shader> shader) override;
 
 	virtual void tick(GameData* gameData) override;
 	virtual void draw(DrawData* drawData)override;
 private:
-	std::unique_ptr<VertexArray> m_va;
-	std::unique_ptr<VertexBuffer> m_vb;
-	std::unique_ptr<IndexBuffer> m_ib;
-	std::unique_ptr<Shader> m_shader;
 };

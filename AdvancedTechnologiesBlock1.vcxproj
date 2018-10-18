@@ -150,6 +150,7 @@
     <ClCompile Include="Source\Renderer.cpp" />
     <ClCompile Include="Source\Shader.cpp" />
     <ClCompile Include="Source\Timer.cpp" />
+    <ClCompile Include="Source\VBO.cpp" />
     <ClCompile Include="Source\Vendor\glm\detail\glm.cpp" />
     <ClCompile Include="Source\VertexArray.cpp" />
     <ClCompile Include="Source\VertexBuffer.cpp" />
@@ -169,9 +170,11 @@
     <ClInclude Include="Source\GameData.h" />
     <ClInclude Include="Source\GameObject3D.h" />
     <ClInclude Include="Source\IndexBuffer.h" />
+    <ClInclude Include="Source\Plane.h" />
     <ClInclude Include="Source\Renderer.h" />
     <ClInclude Include="Source\Shader.h" />
     <ClInclude Include="Source\Timer.h" />
+    <ClInclude Include="Source\VBO.h" />
     <ClInclude Include="Source\Vendor\glm\common.hpp" />
     <ClInclude Include="Source\Vendor\glm\detail\compute_common.hpp" />
     <ClInclude Include="Source\Vendor\glm\detail\compute_vector_relational.hpp" />

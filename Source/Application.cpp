@@ -46,16 +46,11 @@ const bool Application::run()
 	// The render loop is controlled here.
 	MSG  msg;
 	msg.message = WM_NULL;
-	PeekMessage(&msg, NULL, 0U, 0U, PM_NOREMOVE);
 
 	while (WM_QUIT != msg.message)
 	{
-		while(PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE))
-		{
-			// Translate and dispatch the message
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
+		msg = processMessage();
+		
 		m_game.tick(timer.mark(), m_window.getKeyboard(), m_window.getMouse());
 		m_game.draw(m_renderer);
 
@@ -63,4 +58,18 @@ const bool Application::run()
 	}
 
 	return true;
+}
+
+MSG Application::processMessage()
+{
+	MSG  msg;
+	msg.message = WM_NULL;
+	while (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE))
+	{
+		// Translate and dispatch the message
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+	}
+
+	return msg;
 }
