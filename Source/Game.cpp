@@ -2,23 +2,22 @@
 
 #include "ErrorHandler.h"
 #include "Cube.h"
+#include "Player.h"
 
 bool Game::init()
 {
 	std::shared_ptr<Shader> shader = std::make_shared<Shader>
 		("Resources/Shaders/VertexShader.glsl", "Resources/Shaders/FragmentShader.frag");
 
-	for (int x = 0; x < 10; x++)
-	{
-		for (int z = 0; z < 10; z++)
-		{
-			auto m_cube = std::make_unique<Cube>();
-			m_cube->init(shader);
-			m_cube->setPos(glm::vec3(x, 0.0f, z));
-			m_cube->setScale(glm::vec3(0.1f, 0.1f, 0.1f));
-			m_gameObjects.push_back(std::move(m_cube));
-		}
-	}
+
+	auto m_cube = std::make_unique<Cube>();
+	m_cube->init(shader);
+	m_cube->setScale(glm::vec3(0.1f, 0.1f, 0.1f));
+
+	auto player = std::make_unique<Player>();
+	player->setScale(glm::vec3(0.1f, 0.1f, 0.1f));
+	player->init(std::move(m_cube));
+	m_gameObjects.push_back(std::move(player));
 
 	m_gameData = std::make_unique<GameData>();
 

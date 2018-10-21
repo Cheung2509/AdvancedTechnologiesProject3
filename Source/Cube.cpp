@@ -173,17 +173,19 @@ void Cube::init(std::shared_ptr<Shader> shader)
 {
 	float positions[] =
 	{
-		// front			//Colour
-		-1.0, -1.0,  1.0,	1.0f, 0.0f, 0.0f, 1.0f,
-		 1.0, -1.0,  1.0,	0.0f, 1.0f, 0.0f, 1.0f,
-		 1.0,  1.0,  1.0,	0.0f, 0.0f, 1.0f, 1.0f,
-		-1.0,  1.0,  1.0,	0.5f, 0.5f, 0.5f, 1.0f,
+		// front		
+		-1.0, -1.0,  1.0,
+		 1.0, -1.0,  1.0,
+		 1.0,  1.0,  1.0,
+		-1.0,  1.0,  1.0,
 		// back
-		-1.0, -1.0, -1.0,	1.0f, 0.0f, 0.0f, 1.0f,
-		 1.0, -1.0, -1.0,	0.0f, 1.0f, 0.0f, 1.0f,
-		 1.0,  1.0, -1.0,	0.0f, 0.0f, 1.0f, 1.0f,
-		-1.0,  1.0, -1.0,	0.5f, 0.5f, 0.5f, 1.0f
+		-1.0, -1.0, -1.0,
+		 1.0, -1.0, -1.0,
+		 1.0,  1.0, -1.0,
+		-1.0,  1.0, -1.0
 	};
+
+
 
 	unsigned int indices[] =
 	{
@@ -213,22 +215,26 @@ void Cube::init(std::shared_ptr<Shader> shader)
 	m_vb = std::make_unique<VertexBuffer>(positions, sizeof(positions));
 	VertexBufferLayout layout;
 	layout.push<float>(3);
-	layout.push<float>(4);
 	m_va->addBuffer(*m_vb, layout);
 
 
 	m_ib = std::make_unique<IndexBuffer>(indices, sizeof(indices));
 
 	m_shader = shader;
+
+	//Just preset stuff for now
+	for (int i = 0; i < sizeof(positions) / sizeof(positions[0]); i++)
+	{
+		m_vertices.emplace_back(positions[i], positions[i++], positions[i++]);
+	}
+
+	calculateminMax();
+
+	m_colour = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
 }
 
 void Cube::tick(GameData * gameData)
 {
-	if (gameData->m_keyboard.keyIsPressed(Key::KEY_D))
-	{
-		m_yaw += 1.0f * gameData->m_deltaTime;
-	}
-
 	VBO::tick(gameData);
 }
 
