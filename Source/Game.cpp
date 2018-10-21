@@ -3,6 +3,7 @@
 #include "ErrorHandler.h"
 #include "Cube.h"
 #include "Player.h"
+#include "CollidableCube.h"
 
 bool Game::init()
 {
@@ -18,6 +19,17 @@ bool Game::init()
 	player->setScale(glm::vec3(0.1f, 0.1f, 0.1f));
 	player->init(std::move(m_cube));
 	m_gameObjects.push_back(std::move(player));
+
+	auto cube2 = std::make_unique<Cube>();
+	cube2->init(shader);
+	cube2->setScale(glm::vec3(0.1f, 0.1f, 0.1f));
+
+	auto cube = std::make_unique<CollidableCube>();
+	cube->setScale(glm::vec3(0.1f, 0.1f, 0.1f));
+	cube->init(std::move(cube2));
+	cube->setPos(glm::vec3(2.0f, 0.0f, 0.0f));
+	m_gameObjects.push_back(std::move(cube));
+
 
 	m_gameData = std::make_unique<GameData>();
 
@@ -40,6 +52,26 @@ void Game::tick(const float& deltaTime, const Keyboard& keyboard, const Mouse& m
 	for (auto& object : m_gameObjects)
 	{
 		object->tick(m_gameData.get());
+	}
+
+	for (auto& object1 : m_gameObjects)
+	{
+		for (auto& object2 : m_gameObjects)
+		{
+			if (object1 != object2)
+			{
+				if (AABBobj::checkCollision(*object1, *object2))
+				{
+					object1->setCollided(true);
+					object2->setCollided(true);
+				}
+				else
+				{
+					object1->setCollided(false);
+					object2->setCollided(false);
+				}
+			}
+		}
 	}
 }
 

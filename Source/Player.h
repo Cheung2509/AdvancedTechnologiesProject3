@@ -2,9 +2,9 @@
 
 #include "VBO.h"
 #include "Keyboard.h"
-#include "Collidable.h"
+#include "AABBobj.h"
 
-class Player : public GameObject3D
+class Player : public AABBobj
 {
 public:
 	Player() = default;
@@ -15,11 +15,7 @@ public:
 	virtual void tick(GameData* gameData) override;
 	virtual void draw(DrawData* drawData) override;
 
-	const AABoundingBox& getBoundingBox() const { return m_boundingBox; }
-
 	void handleInput(GameData* keyboard);
 private:
-	bool collided = false;
 	std::unique_ptr<VBO> m_model;
-	AABoundingBox m_boundingBox;
 };

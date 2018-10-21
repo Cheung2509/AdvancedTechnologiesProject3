@@ -7,6 +7,7 @@
 #include "GameData.h"
 #include "DrawData.h"
 #include "Keyboard.h"
+#include "AABBobj.h"
 
 class Game
 {
@@ -22,5 +23,5 @@ private:
 	std::unique_ptr<DrawData> m_drawData;
 	std::unique_ptr<GameData> m_gameData;
 
-	std::vector<std::unique_ptr<GameObject3D>> m_gameObjects;
+	std::vector<std::unique_ptr<AABBobj>> m_gameObjects;
 };

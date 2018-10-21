@@ -140,6 +140,8 @@
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
+    <ClCompile Include="Source\CollidableCube.cpp" />
+    <ClCompile Include="Source\AABBobj.cpp" />
     <ClCompile Include="Source\Cube.cpp" />
     <ClCompile Include="Source\Game.cpp" />
     <ClCompile Include="Source\GameObject3D.cpp" />
@@ -159,6 +161,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Collidable.h" />
+    <ClInclude Include="Source\CollidableCube.h" />
+    <ClInclude Include="Source\AABBobj.h" />
     <ClInclude Include="Source\Helper.h" />
     <ClInclude Include="Source\Key.h" />
     <ClInclude Include="Source\Mouse.h" />
@@ -173,7 +177,6 @@
     <ClInclude Include="Source\GameData.h" />
     <ClInclude Include="Source\GameObject3D.h" />
     <ClInclude Include="Source\IndexBuffer.h" />
-    <ClInclude Include="Source\Plane.h" />
     <ClInclude Include="Source\Player.h" />
     <ClInclude Include="Source\Renderer.h" />
     <ClInclude Include="Source\Shader.h" />

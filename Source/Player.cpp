@@ -14,11 +14,9 @@ void Player::tick(GameData * gameData)
 {
 	handleInput(gameData);
 
-	auto tempBox = AABoundingBox{m_pos + m_boundingBox.m_min, m_pos + m_boundingBox.m_max};
-
 	glm::vec3 pos = glm::vec3(1.0f, 0.0f, 0.0f);
 
-	if (Collision::hasCollided(tempBox, pos))
+	if (m_collided)
 	{
 		m_model->setColour(glm::vec4(1.0f, 0.0f, 0.f, 1.0f));
 	}
