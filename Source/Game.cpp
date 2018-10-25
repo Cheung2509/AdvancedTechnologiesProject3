@@ -24,11 +24,41 @@ bool Game::init()
 	cube2->init(shader);
 	cube2->setScale(glm::vec3(0.1f, 0.1f, 0.1f));
 
-	auto cube = std::make_unique<CollidableCube>();
-	cube->setScale(glm::vec3(0.1f, 0.1f, 0.1f));
-	cube->init(std::move(cube2));
-	cube->setPos(glm::vec3(2.0f, 0.0f, 0.0f));
-	m_gameObjects.push_back(std::move(cube));
+	auto CollideCube = std::make_unique<CollidableCube>();
+	CollideCube->setScale(glm::vec3(0.1f, 0.1f, 0.1f));
+	CollideCube->init(std::move(cube2));
+	CollideCube->setPos(glm::vec3(2.0f, 0.0f, 0.0f));
+	m_gameObjects.push_back(std::move(CollideCube));
+
+	auto cube3 = std::make_unique<Cube>();
+	cube3->init(shader);
+	cube3->setScale(glm::vec3(0.1f, 0.1f, 0.1f));
+
+	auto CollideCube2 = std::make_unique<CollidableCube>();
+	CollideCube2->setScale(glm::vec3(0.1f, 0.1f, 0.1f));
+	CollideCube2->init(std::move(cube3));
+	CollideCube2->setPos(glm::vec3(-2.0f, 0.0f, 0.0f));
+	m_gameObjects.push_back(std::move(CollideCube2));
+
+	auto cube4 = std::make_unique<Cube>();
+	cube4->init(shader);
+	cube4->setScale(glm::vec3(0.1f, 0.1f, 0.1f));
+
+	auto CollideCube3 = std::make_unique<CollidableCube>();
+	CollideCube3->setScale(glm::vec3(0.1f, 0.1f, 0.1f));
+	CollideCube3->init(std::move(cube4));
+	CollideCube3->setPos(glm::vec3(0.0f, 0.0f, 2.0f));
+	m_gameObjects.push_back(std::move(CollideCube3));
+
+	auto cube5 = std::make_unique<Cube>();
+	cube5->init(shader);
+	cube5->setScale(glm::vec3(0.1f, 0.1f, 0.1f));
+
+	auto CollideCube4 = std::make_unique<CollidableCube>();
+	CollideCube4->setScale(glm::vec3(0.1f, 0.1f, 0.1f));
+	CollideCube4->init(std::move(cube5));
+	CollideCube4->setPos(glm::vec3(0.0f, 0.0f, -2.0f));
+	m_gameObjects.push_back(std::move(CollideCube4));
 
 
 	m_gameData = std::make_unique<GameData>();
@@ -47,6 +77,11 @@ void Game::tick(const float& deltaTime, const Keyboard& keyboard, const Mouse& m
 	m_gameData->m_keyboard = keyboard;
 	m_gameData->m_mouse = mouse;
 
+	if (keyboard.keyIsPressed(VK_ESCAPE))
+	{
+		PostQuitMessage(0);
+	}
+
 	m_drawData->m_camera->tick(m_gameData.get());
 
 	for (auto& object : m_gameObjects)
@@ -54,22 +89,20 @@ void Game::tick(const float& deltaTime, const Keyboard& keyboard, const Mouse& m
 		object->tick(m_gameData.get());
 	}
 
-	for (auto& object1 : m_gameObjects)
+	for (int i = 0; i < m_gameObjects.size(); i++)
 	{
-		for (auto& object2 : m_gameObjects)
+		for (int j = 0; i < m_gameObjects.size(); i++)
 		{
-			if (object1 != object2)
+			if (AABBobj::checkCollision(*m_gameObjects[i], *m_gameObjects[j]))
 			{
-				if (AABBobj::checkCollision(*object1, *object2))
-				{
-					object1->setCollided(true);
-					object2->setCollided(true);
-				}
-				else
-				{
-					object1->setCollided(false);
-					object2->setCollided(false);
-				}
+				m_gameObjects[i]->setColour(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+				m_gameObjects[j]->setColour(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+				break;
+			}
+			else
+			{
+				m_gameObjects[i]->setColour(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+				m_gameObjects[j]->setColour(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
 			}
 		}
 	}

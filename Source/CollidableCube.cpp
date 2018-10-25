@@ -9,15 +9,6 @@ void CollidableCube::init(std::unique_ptr<VBO> model)
 
 void CollidableCube::tick(GameData * gameData)
 {
-	if (m_collided)
-	{
-		m_model->setColour(glm::vec4(1.0f, 0.0f, 0.f, 1.0f));
-	}
-	else
-	{
-		m_model->setColour(glm::vec4(0.0f, 1.0f, 0.f, 1.0f));
-	}
-
 	GameObject3D::tick(gameData);
 }
 
@@ -25,5 +16,6 @@ void CollidableCube::draw(DrawData * drawData)
 {
 	//Draw model
 	m_model->setWorld(this->m_worldMatrix);
+	m_model->setColour(m_colour);
 	m_model->draw(drawData);
 }

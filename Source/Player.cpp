@@ -14,17 +14,6 @@ void Player::tick(GameData * gameData)
 {
 	handleInput(gameData);
 
-	glm::vec3 pos = glm::vec3(1.0f, 0.0f, 0.0f);
-
-	if (m_collided)
-	{
-		m_model->setColour(glm::vec4(1.0f, 0.0f, 0.f, 1.0f));
-	}
-	else
-	{
-		m_model->setColour(glm::vec4(0.0f, 1.0f, 0.f, 1.0f));
-	}
-
 	GameObject3D::tick(gameData);
 }
 
@@ -32,6 +21,7 @@ void Player::draw(DrawData * drawData)
 {
 	//Draw model
 	m_model->setWorld(this->m_worldMatrix);
+	m_model->setColour(m_colour);
 	m_model->draw(drawData);
 }
 
@@ -39,12 +29,12 @@ void Player::handleInput(GameData* gameData)
 {
 	if (gameData->m_keyboard.keyIsPressed(Key::KEY_A))
 	{
-		m_yaw -= 1.0f * gameData->m_deltaTime;
+		m_pos -= glm::vec3(0.0f, 0.0f, 1.0f) * gameData->m_deltaTime;
 	}
 
 	if (gameData->m_keyboard.keyIsPressed(Key::KEY_D))
 	{
-		m_yaw += 1.0f * gameData->m_deltaTime;
+		m_pos += glm::vec3(0.0f, 0.0f, 1.0f) * gameData->m_deltaTime;
 	}
 
 	if (gameData->m_keyboard.keyIsPressed(Key::KEY_W))

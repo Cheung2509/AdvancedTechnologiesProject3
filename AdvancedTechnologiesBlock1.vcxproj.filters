@@ -896,6 +896,9 @@
     <ClInclude Include="Source\AABBobj.h">
       <Filter>Header Files\Game</Filter>
     </ClInclude>
+    <ClInclude Include="Source\OBB.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\VertexShader.glsl">

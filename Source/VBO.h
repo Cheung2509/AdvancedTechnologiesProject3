@@ -28,7 +28,6 @@ public:
 	const glm::vec3& getMax() const { return m_max; }
 	
 	void setWorld(const glm::mat4& world) { m_worldMatrix = world; }
-	void setColour(const glm::vec4& colour) { m_colour = colour; }
 protected:
 	void calculateminMax();
 
@@ -40,7 +39,6 @@ protected:
 	//To set Bounding box of object
 	std::vector<glm::vec3> m_vertices;
 
-	glm::vec4 m_colour;
 	glm::vec3 m_min;
 	glm::vec3 m_max;
 };

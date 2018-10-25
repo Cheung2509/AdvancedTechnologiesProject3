@@ -21,6 +21,8 @@ public:
 	const glm::vec3& getPos() const { return m_pos; }
 	const glm::vec3& getScale() const { return m_scale; }
 
+	const glm::vec4& getColour() const { return m_colour; }
+
 	const float& getPitch() const {return m_pitch; }
 	const float& getYaw() const { return m_yaw; }
 	const float& getRoll() const { return m_roll; }
@@ -28,6 +30,9 @@ public:
 	//Setters
 	void setPos(const glm::vec3& newPos) { m_pos = newPos; }
 	void setScale(const glm::vec3& newScale) { m_scale = newScale; }
+
+	void setColour(const glm::vec4& colour) { m_colour = colour; }
+
 
 	void setPitch(const float& newPitch) { m_pitch = newPitch; }
 	void setYaw(const float& newYaw) { m_yaw = newYaw; }
@@ -46,6 +51,8 @@ protected:
 	float m_pitch = 0;
 	float m_yaw = 0;
 	float m_roll = 0;
+
+	glm::vec4 m_colour = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
 
 	glm::mat4 m_worldMatrix;
 	glm::mat4 m_rotationMatrix;
