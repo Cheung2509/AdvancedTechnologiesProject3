@@ -27,6 +27,8 @@ public:
 	const float& getYaw() const { return m_yaw; }
 	const float& getRoll() const { return m_roll; }
 
+	const glm::mat4& getWorld() const { return m_worldMatrix; }
+
 	//Setters
 	void setPos(const glm::vec3& newPos) { m_pos = newPos; }
 	void setScale(const glm::vec3& newScale) { m_scale = newScale; }

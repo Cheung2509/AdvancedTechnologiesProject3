@@ -20,9 +20,9 @@ void Player::tick(GameData * gameData)
 void Player::draw(DrawData * drawData)
 {
 	//Draw model
-	m_model->setWorld(this->m_worldMatrix);
-	m_model->setColour(m_colour);
-	m_model->draw(drawData);
+	//m_model->setWorld(this->m_worldMatrix);
+	//m_model->setColour(m_colour);
+	//m_model->draw(drawData);
 }
 
 void Player::handleInput(GameData* gameData)

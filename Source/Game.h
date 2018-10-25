@@ -1,13 +1,11 @@
 #pragma once
 
 #include "Renderer.h"
-#include "VertexArray.h"
-#include "Shader.h"
-#include "IndexBuffer.h"
 #include "GameData.h"
 #include "DrawData.h"
 #include "Keyboard.h"
-#include "AABBobj.h"
+
+#include "ECS.h"
 
 class Game
 {
@@ -23,5 +21,5 @@ private:
 	std::unique_ptr<DrawData> m_drawData;
 	std::unique_ptr<GameData> m_gameData;
 
-	std::vector<std::unique_ptr<AABBobj>> m_gameObjects;
+	Manager m_EntityManager;
 };
