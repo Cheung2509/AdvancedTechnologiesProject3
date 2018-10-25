@@ -11,7 +11,7 @@ bool Game::init()
 	m_EntityManager;
 
 	auto& player = m_EntityManager.addEntity();
-	player.addComponent<Cube>();
+	player.addComponent<VBO>(shader);
 
 	m_gameData = std::make_unique<GameData>();
 

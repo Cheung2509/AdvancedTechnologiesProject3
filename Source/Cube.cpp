@@ -58,7 +58,7 @@ Cube::Cube()
 	m_shader = std::make_unique<Shader>("Resources/Shaders/VertexShader.glsl", "Resources/Shaders/FragmentShader.frag");
 }
 
-Cube::Cube(std::shared_ptr<Shader> shader)
+Cube::Cube(std::shared_ptr<Shader> shader) : VBO(shader)
 {
 	float positions[] =
 	{
@@ -108,8 +108,6 @@ Cube::Cube(std::shared_ptr<Shader> shader)
 
 
 	m_ib = std::make_unique<IndexBuffer>(indices, sizeof(indices));
-
-	m_shader = shader;
 
 	//Just preset stuff for now
 	for (int i = 0; i < sizeof(positions) / sizeof(positions[0]); i++)

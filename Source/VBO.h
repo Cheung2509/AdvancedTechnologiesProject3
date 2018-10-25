@@ -1,19 +1,17 @@
 #pragma once
 
-#include <memory>
-
 #include "VertexArray.h"
 #include "VertexBufferLayout.h"
 #include "IndexBuffer.h"
 #include "Shader.h"
 #include "ECS.h"
-#include "GameObject3D.h"
 
 class VBO : public Component
 {
 public:
-	VBO() {};
-	virtual ~VBO() {};
+	VBO() = default;
+	VBO(std::shared_ptr<Shader> shader);
+	virtual ~VBO() = default;
 
 	std::shared_ptr<Shader> getShader()const { return m_shader; }
 

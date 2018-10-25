@@ -65,7 +65,19 @@ public:
 	}
 
 	template<typename T, typename... TArgs>
-	T& addComponent(TArgs&&... mArgs);
+	T& addComponent(TArgs&&... mArgs)
+	{
+		T* c(new T(std::forward<TArgs>(mArgs)...));
+		c->entity = this;
+		std::unique_ptr<Component> uPtr{c};
+		m_compenents.emplace_back(std::move(uPtr));
+
+		m_componentArray[getComponentTypeID<T>()] = c;
+		m_componentArray[getComponentTypeID<T>()] = true;
+
+		c->init();
+		return *c;
+	}
 
 	template<typename T> T& getComponent() const
 	{

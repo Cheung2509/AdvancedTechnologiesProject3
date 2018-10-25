@@ -3,6 +3,11 @@
 #include "DrawData.h"
 #include "GameData.h"
 
+VBO::VBO(std::shared_ptr<Shader> shader)
+{
+	m_shader = m_shader;
+}
+
 void VBO::tick(GameData * gameData)
 {
 	Component::tick(gameData);

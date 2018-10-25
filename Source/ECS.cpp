@@ -1,20 +1,5 @@
 #include "ECS.h"
 
-template<typename T, typename ...TArgs>
-inline T & Entity::addComponent(TArgs && ...mArgs)
-{
-	T* c(new T(std::forward<TArgs>(mArgs)...));
-	c->entity = this;
-	std::unique_ptr<Component> uPtr{c};
-	m_compenents.emplace_back(std::move(uPtr));
-
-	m_componentArray[getComponentTypeID<T>()] = c;
-	m_componentArray[getComponentTypeID<T>()] = true;
-
-	c->init();
-	return *c;
-}
-
 void Entity::tick(GameData* gameData)
 {
 	for (auto& c : m_compenents)
