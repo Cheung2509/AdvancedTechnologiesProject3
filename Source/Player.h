@@ -2,9 +2,9 @@
 
 #include "VBO.h"
 #include "Keyboard.h"
-#include "AABBobj.h"
+#include "OBBobj.h"
 
-class Player : public AABBobj
+class Player : public OBBobj
 {
 public:
 	Player() = default;

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "AABBobj.h"
+#include "OBBobj.h"
 #include "VBO.h"
 
-class CollidableCube : public AABBobj
+class CollidableCube : public OBBobj
 {
 public:
 	CollidableCube() = default;

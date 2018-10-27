@@ -96,10 +96,13 @@
     <ClCompile Include="Source\Player.cpp">
       <Filter>Source Files\Game</Filter>
     </ClCompile>
-    <ClCompile Include="Source\CollidableCube.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\AABBobj.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CollidableCube.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\OBBobj.cpp">
       <Filter>Source Files\Game</Filter>
     </ClCompile>
   </ItemGroup>
@@ -896,7 +899,7 @@
     <ClInclude Include="Source\AABBobj.h">
       <Filter>Header Files\Game</Filter>
     </ClInclude>
-    <ClInclude Include="Source\OBB.h">
+    <ClInclude Include="Source\OBBobj.h">
       <Filter>Header Files\Game</Filter>
     </ClInclude>
   </ItemGroup>
