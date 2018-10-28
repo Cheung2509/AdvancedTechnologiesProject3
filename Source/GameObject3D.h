@@ -1,8 +1,11 @@
 #pragma once
 
+#define GLM_ENABLE_EXPERIMENTAL
+
 #include <memory>
 
 #include "glm/glm.hpp"
+#include "glm/gtx/quaternion.hpp"
 
 struct GameData;
 struct DrawData;
@@ -23,9 +26,7 @@ public:
 
 	const glm::vec4& getColour() const { return m_colour; }
 
-	const float& getPitch() const {return m_pitch; }
-	const float& getYaw() const { return m_yaw; }
-	const float& getRoll() const { return m_roll; }
+	const glm::quat& getRotation() const { return m_rotation; }
 
 	//Setters
 	void setPos(const glm::vec3& newPos) { m_pos = newPos; }
@@ -33,24 +34,13 @@ public:
 
 	void setColour(const glm::vec4& colour) { m_colour = colour; }
 
-
-	void setPitch(const float& newPitch) { m_pitch = newPitch; }
-	void setYaw(const float& newYaw) { m_yaw = newYaw; }
-	void setRoll(const float& newRoll) { m_roll = newRoll; }
-	void setPitchYawRoll(const float& newPitch, const float& newYaw, const float& newRoll)
-	{
-		m_pitch = newPitch;
-		m_yaw = newYaw;
-		m_roll = newRoll;
-	}
+	void rotate(const float& angle, const glm::vec3& axis) { m_rotation = glm::rotate(m_rotation, angle, axis); }
 
 protected:
 	glm::vec3 m_pos;
 	glm::vec3 m_scale;
 	
-	float m_pitch = 0;
-	float m_yaw = 0;
-	float m_roll = 0;
+	glm::quat m_rotation;
 
 	glm::vec4 m_colour = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
 

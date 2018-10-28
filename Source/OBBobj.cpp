@@ -162,9 +162,8 @@ void OBBobj::tick(GameData * gameData)
 	glm::vec3 forward = glm::vec3(1.0f, 0.0f, 0.0f);
 	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
 	glm::vec3 right = glm::vec3(0.0f, 0.0f, 1.0f);
-	glm::quat rotation = glm::quat(glm::vec3(m_roll, m_pitch, m_yaw));
 
-	m_boundingBox.m_axes[0] = glm::normalize(forward * rotation);
-	m_boundingBox.m_axes[1] = glm::normalize(up * rotation);
-	m_boundingBox.m_axes[2] = glm::normalize(right * rotation);
+	m_boundingBox.m_axes[0] = glm::normalize(forward * m_rotation);
+	m_boundingBox.m_axes[1] = glm::normalize(up * m_rotation);
+	m_boundingBox.m_axes[2] = glm::normalize(right * m_rotation);
 }

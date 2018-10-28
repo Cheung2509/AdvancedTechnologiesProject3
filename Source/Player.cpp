@@ -66,10 +66,12 @@ void Player::handleInput(GameData* gameData)
 
 	if (gameData->m_keyboard.keyIsPressed(Key::KEY_Q))
 	{
-		m_yaw += 1.0f * gameData->m_deltaTime;
+		m_rotation = glm::rotate(m_rotation, 1.0f * gameData->m_deltaTime, 
+								 glm::vec3(0.0f,1.0f,0.0f));;
 	}
 	else if (gameData->m_keyboard.keyIsPressed(Key::KEY_E))
 	{
-		m_yaw -= 1.0f * gameData->m_deltaTime;
+		m_rotation = glm::rotate(m_rotation, 1.0f * gameData->m_deltaTime,
+					glm::vec3(0.0f, 1.0f, 0.0f));;
 	}
 }
