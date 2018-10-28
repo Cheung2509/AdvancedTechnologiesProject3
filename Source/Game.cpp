@@ -105,6 +105,7 @@ void Game::tick(const float& deltaTime, const Keyboard& keyboard, const Mouse& m
 					{
 						obj1->setCollided(true);
 						obj2->setCollided(true);
+						obj2->pushObject(obj1.get(), m_gameData.get());;
 					}
 					else
 					{

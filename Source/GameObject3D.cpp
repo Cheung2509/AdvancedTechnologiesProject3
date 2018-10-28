@@ -24,3 +24,10 @@ void GameObject3D::tick(GameData * gameData)
 
 	m_worldMatrix = translationMat * m_rotationMatrix * scaleMat;
 }
+
+void GameObject3D::pushObject(GameObject3D * obj1, GameData* gameData)
+{
+	auto direction = glm::normalize(m_pos - obj1->getPos());
+
+	m_pos += direction * gameData->m_deltaTime;
+}

@@ -20,22 +20,18 @@ public:
 	virtual void tick(GameData* gameData);
 	virtual void draw(DrawData* drawData) = 0;
 
+	virtual void pushObject(GameObject3D* obj1, GameData* gameData);
 	//Getters
 	const glm::vec3& getPos() const { return m_pos; }
 	const glm::vec3& getScale() const { return m_scale; }
-
 	const glm::vec4& getColour() const { return m_colour; }
-
 	const glm::quat& getRotation() const { return m_rotation; }
 
 	//Setters
 	void setPos(const glm::vec3& newPos) { m_pos = newPos; }
 	void setScale(const glm::vec3& newScale) { m_scale = newScale; }
-
 	void setColour(const glm::vec4& colour) { m_colour = colour; }
-
 	void rotate(const float& angle, const glm::vec3& axis) { m_rotation = glm::rotate(m_rotation, angle, axis); }
-
 protected:
 	glm::vec3 m_pos;
 	glm::vec3 m_scale;
@@ -46,4 +42,6 @@ protected:
 
 	glm::mat4 m_worldMatrix;
 	glm::mat4 m_rotationMatrix;
+
+	bool m_physics = false;
 };
