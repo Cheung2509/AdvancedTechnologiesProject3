@@ -1,9 +1,12 @@
 #version 400 core
 
-in vec4 fragmentColour;
-out vec4 colour;
+in vec2 TexCoords;
 
-void main()
+out vec4 color;
+
+uniform sampler2D texture_diffuse;
+
+void main( )
 {
-	colour = fragmentColour;
-};
+    color = vec4( texture( texture_diffuse, TexCoords ));
+}

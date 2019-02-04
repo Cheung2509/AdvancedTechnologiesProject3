@@ -59,6 +59,11 @@ const bool Renderer::init(HWND& hWnd)
 
 	wglCreateContextAttribsARB(hdc, m_deviceContext, attribList);
 
+	if (!wglMakeCurrent(hdc, m_deviceContext))
+	{
+		return false;
+	}
+
 
 #if _DEBUG == 1
 	//Print version of OpenGL

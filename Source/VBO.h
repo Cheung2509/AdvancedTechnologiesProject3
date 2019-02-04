@@ -19,8 +19,6 @@ public:
 
 	std::shared_ptr<Shader> getShader()const { return m_shader; }
 
-	
-
 	virtual void tick(GameData* gameData) override;
 	virtual void draw(DrawData* drawData) override;
 
