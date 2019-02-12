@@ -38,6 +38,8 @@ void Mesh::draw(DrawData * drawData)
 	glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
+	//drawData->m_renderer->draw(*m_vertexArray, *m_indexBuffer, *m_shader);
+
 	// Always good practice to set everything back to defaults once configured.
 	for (unsigned int i = 0; i < m_textures.size(); i++)
 	{

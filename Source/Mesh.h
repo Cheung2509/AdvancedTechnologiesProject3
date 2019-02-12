@@ -2,6 +2,8 @@
 
 #include <string>
 #include <vector>
+#include <map>
+#include <string>
 
 #include "Vertex.h"
 #include "VertexArray.h"
@@ -25,6 +27,7 @@ private:
 	std::vector<Vertex> m_vertices;
 	std::vector<unsigned int> m_indices;
 	std::vector<Texture> m_textures;
+	std::vector<Bone> m_bones;
 
 	unsigned int VAO, VBO, EBO;
 

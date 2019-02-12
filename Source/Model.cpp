@@ -1,6 +1,9 @@
 #include "Model.h"
 
 #include <iostream>
+#include <string>
+
+#include <assimp/matrix4x4.h>
 #include "Vendor/SOIL2/SOIL2.h"
 
 Model::Model(const char * path) : GameObject3D()
@@ -55,6 +58,10 @@ Mesh* Model::processMesh(aiMesh * mesh, const aiScene * scene)
 	std::vector<unsigned int> indices;
 	std::vector<Texture> textures;
 
+	std::vector<VertexBoneData> bones;
+	std::vector<BoneInfo> boneInfo;
+	std::map<std::string, unsigned int> boneMapping;
+
 	//get all vertices
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 	{
@@ -90,6 +97,39 @@ Mesh* Model::processMesh(aiMesh * mesh, const aiScene * scene)
 		vertices.push_back(vertex);
 	}
 
+	//Load bones if there are bones in mesh
+	if (mesh->HasBones())
+	{
+		for (unsigned int i = 0; i < mesh->mNumBones; i++)
+		{
+			unsigned int boneIndex = 0;
+			std::string name = mesh->mBones[i]->mName.data;
+
+			if (boneMapping.find(name) == boneMapping.end())
+			{
+				boneIndex = mesh->mNumBones;
+				BoneInfo bi;
+				bi.m_boneOffset = mesh->mBones[i]->mOffsetMatrix;
+				boneInfo.push_back(bi);
+			}
+			else
+			{
+				boneIndex = boneMapping[name];
+			}
+
+			boneMapping[name] = boneIndex;
+			boneInfo[boneIndex].m_boneOffset = mesh->mBones[i]->mOffsetMatrix;
+
+			for (unsigned int j = 0; j < mesh->mBones[i]->mNumWeights; j++)
+			{
+				unsigned int vertexID;
+				float weight = mesh->mBones[i]->mWeights[j].mWeight;
+				bones[vertexID].addBoneData(boneIndex, weight);
+			}
+		}
+	}
+
+	//Process all indices
 	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
 	{
 		aiFace face = mesh->mFaces[i];
