@@ -4,7 +4,7 @@ layout ( location = 0 ) in vec3 position;
 layout ( location = 1 ) in vec3 normal;
 layout ( location = 2 ) in vec2 texCoords;
 layout ( location = 3 ) in ivec4 boneIDs;
-layout ( loaction = 4 ) in vec4 weights;
+layout ( location = 4 ) in vec4 weights;
 
 out vec2 TexCoords;
 
@@ -15,14 +15,16 @@ uniform mat4 gBones[MAX_BONES];
 
 void main( )
 {
-	mat4 BoneTransform = gBones[boneIDs[0]] * weights[0];
-	BoneTransform +=  gBones[boneIDs[1]] * weights[1];
-	BoneTransform +=  gBones[boneIDs[2]] * weights[2];
-	BoneTransform +=  gBones[boneIDs[3]] * weights[3];
+//	mat4 BoneTransform = gBones[boneIDs[0]] * weights[0];
+//	BoneTransform +=  gBones[boneIDs[1]] * weights[1];
+//	BoneTransform +=  gBones[boneIDs[2]] * weights[2];
+//	BoneTransform +=  gBones[boneIDs[3]] * weights[3];
 
 	
-	vec4 posL = BoneTransform * vec4(position, 1.0f);
-    gl_Position = u_MVP * posL;
+//	vec4 posL = BoneTransform * vec4(position, 1.0f);
+//    gl_Position = u_MVP * posL;
+
+	gl_Position = u_MVP * vec4(position, 1.0f);
 
     TexCoords = texCoords;
 }
