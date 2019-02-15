@@ -57,7 +57,8 @@ Mesh* Model::processMesh(aiMesh * mesh, const aiScene * scene)
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
 	std::vector<Texture> textures;
-	std::vector<aiBone> bones;
+	std::vector<VertexBoneData> bones;
+	std::vector<BoneInfo> boneInfo;
 
 	//get all vertices
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
@@ -95,11 +96,32 @@ Mesh* Model::processMesh(aiMesh * mesh, const aiScene * scene)
 	}
 
 	//Load bones if there are bones in mesh
-	if (mesh->HasBones())
+	if (!mesh->HasBones())
 	{
 		for (unsigned int i = 0; i < mesh->mNumBones; i++)
 		{
-			bones.push_back(*mesh->mBones[i]);
+			unsigned int index = 0;
+			std::string boneName(mesh->mBones[i]->mName.data);
+
+			if (m_boneMapping.find(boneName) == m_boneMapping.end())
+			{
+				index = mesh->mNumBones;
+				BoneInfo bi;
+				boneInfo.push_back(bi);
+				boneInfo[index].m_boneOffset = mesh->mBones[i]->mOffsetMatrix;
+				m_boneMapping[boneName] = index;
+			}
+			else
+			{
+				index = m_boneMapping[boneName];
+			}
+
+			for (unsigned int j = 0; j < mesh->mBones[i]->mNumWeights; j++)
+			{
+				unsigned int id = mesh->mBones[i]->mWeights[j].mVertexId;
+				float weight = mesh->mBones[i]->mWeights[j].mWeight;
+				bones[id].addBoneData(index, weight);
+			}
 		}
 	}
 
@@ -133,7 +155,7 @@ Mesh* Model::processMesh(aiMesh * mesh, const aiScene * scene)
 	auto shader = std::make_unique<Shader>("Resources/Shaders/VertexShader.glsl",
 										"Resources/Shaders/FragmentShader.frag");
 
-	return new Mesh(vertices, indices, textures, std::move(shader), bones);
+	return new Mesh(vertices, indices, textures, std::move(shader), bones, boneInfo);
 }
 
 const std::vector<Texture> Model::loadMaterialTexture(aiMaterial * mat, aiTextureType type, std::string typeName)

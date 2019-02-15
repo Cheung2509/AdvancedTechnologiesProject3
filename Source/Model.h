@@ -28,6 +28,8 @@ private:
 	std::vector<std::unique_ptr<Mesh>> m_meshes;
 	std::string m_directory;
 	std::vector<Texture> m_texturesLoaded;
+
+	std::map<std::string, unsigned int> m_boneMapping;
 };
 
 const int& loadTexture(const char* path, std::string directory);

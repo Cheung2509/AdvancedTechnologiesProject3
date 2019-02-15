@@ -34,7 +34,7 @@ void Mesh::draw(DrawData * drawData)
 
 	m_shader->bind();
 	// Draw mesh
-	glBindVertexArray(VAO);
+	glBindVertexArray(m_VAO);
 	glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
@@ -51,14 +51,14 @@ void Mesh::draw(DrawData * drawData)
 void Mesh::initialiseMesh()
 {
 	// Create buffers/arrays
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
+	glGenVertexArrays(1, &m_VAO);
+	glGenBuffers(1, &m_VBO);
 	glGenBuffers(1, &EBO);
 	glGenBuffers(1, &boneBuffer);
 
-	glBindVertexArray(VAO);
+	glBindVertexArray(m_VAO);
 	// Load data into vertex buffers
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
 	// A great thing about structs is that their memory layout is sequential for all its items.
 	// The effect is that we can simply pass a pointer to the struct and it translates perfectly to a glm::vec3/2 array which
 	// again translates to 3/2 floats which translates to a byte array.
@@ -67,8 +67,7 @@ void Mesh::initialiseMesh()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size() * sizeof(GLuint), &m_indices[0], GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ARRAY_BUFFER, boneBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(aiBone) * m_bones.size(), &m_bones[0], GL_STATIC_DRAW);
+	
 
 	// Set the vertex attribute pointers
 	// Vertex Positions
@@ -80,24 +79,29 @@ void Mesh::initialiseMesh()
 	// Vertex Texture Coords
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid *)offsetof(Vertex, m_textureCoords));
-	
-	//Vertex boneID
-	glEnableVertexAttribArray(3);
-	glVertexAttribPointer(3, 4, GL_INT, GL_FALSE, sizeof(aiBone), (GLvoid *)0);
-	//Vertex BoneWeight
-	glEnableVertexAttribArray(4);
-	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(aiBone), (GLvoid *)0);
 
+	if (!m_bones.empty())
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, boneBuffer);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(VertexBoneData) * m_bones.size(), &m_bones[0], GL_STATIC_DRAW);
+		//Vertex boneID
+		glEnableVertexAttribArray(3);
+		glVertexAttribPointer(3, 4, GL_INT, GL_FALSE, sizeof(VertexBoneData), (GLvoid *)0);
+		//Vertex BoneWeight
+		glEnableVertexAttribArray(4);
+		glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(VertexBoneData), (GLvoid *)offsetof(VertexBoneData, m_weights));
+	}
 	glBindVertexArray(0);
 }
 
 Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, std::vector<Texture>& textures,
-			std::unique_ptr<Shader> shader, std::vector<aiBone>& bones)
+			std::unique_ptr<Shader> shader, std::vector<VertexBoneData>& bones, std::vector<BoneInfo>& boneInfo)
 {
 	m_vertices = vertices;
 	m_indices = indices;
 	m_textures = textures;
 	m_bones = bones;
+	m_boneInfo = boneInfo;
 
 	m_shader = std::move(shader);
 

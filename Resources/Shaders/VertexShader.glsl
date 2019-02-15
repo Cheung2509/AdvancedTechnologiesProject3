@@ -15,14 +15,14 @@ uniform mat4 gBones[MAX_BONES];
 
 void main( )
 {
-//	mat4 BoneTransform = gBones[boneIDs[0]] * weights[0];
-//	BoneTransform +=  gBones[boneIDs[1]] * weights[1];
-//	BoneTransform +=  gBones[boneIDs[2]] * weights[2];
-//	BoneTransform +=  gBones[boneIDs[3]] * weights[3];
+	mat4 BoneTransform = gBones[boneIDs[0]] * weights[0];
+	BoneTransform +=  gBones[boneIDs[1]] * weights[1];
+	BoneTransform +=  gBones[boneIDs[2]] * weights[2];
+	BoneTransform +=  gBones[boneIDs[3]] * weights[3];
 
 	
-//	vec4 posL = BoneTransform * vec4(position, 1.0f);
-//    gl_Position = u_MVP * posL;
+	vec4 posL = BoneTransform * vec4(position, 1.0f);
+    gl_Position = u_MVP * posL;
 
 	gl_Position = u_MVP * vec4(position, 1.0f);
 

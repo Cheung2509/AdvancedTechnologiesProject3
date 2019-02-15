@@ -19,7 +19,7 @@ class Mesh : public GameObject3D
 public:
 	Mesh() {}
 	Mesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, std::vector<Texture>& textures,
-		  std::unique_ptr<Shader> shader, std::vector<aiBone>& bones);
+		 std::unique_ptr<Shader> shader, std::vector<VertexBoneData>& bones, std::vector<BoneInfo>& boneInfo);
 
 	void draw(DrawData* drawData) override;
 
@@ -29,9 +29,10 @@ private:
 	std::vector<Vertex> m_vertices;
 	std::vector<unsigned int> m_indices;
 	std::vector<Texture> m_textures;
-	std::vector<aiBone> m_bones;
+	std::vector<VertexBoneData> m_bones;
+	std::vector<BoneInfo> m_boneInfo;
 
-	unsigned int VAO, VBO, EBO;
+	unsigned int m_VAO, m_VBO, EBO;
 	unsigned int boneBuffer;
 
 	std::shared_ptr<Shader> m_shader;
