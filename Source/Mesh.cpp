@@ -11,6 +11,11 @@
 #include <iostream>
 
 
+void Mesh::tick(GameData * gameData)
+{
+	GameObject3D::tick(gameData);
+}
+
 void Mesh::draw(DrawData * drawData)
 {
 	for (unsigned int i = 0; i < m_textures.size(); i++)

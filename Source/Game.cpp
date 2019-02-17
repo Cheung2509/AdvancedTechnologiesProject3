@@ -7,7 +7,7 @@
 bool Game::init()
 {
 	//Initialise game objects
-	std::unique_ptr<Model> model = std::make_unique<Model>("Resources/Models/nanosuit.obj");
+	std::unique_ptr<Model> model = std::make_unique<Model>("Resources/Models/Wolf.fbx");
 	m_gameObjects.emplace_back(std::move(model));
 
 	//Initialise data structures to pass though
@@ -17,7 +17,7 @@ bool Game::init()
 	m_drawData->m_camera = std::make_shared<Camera>(glm::radians(45.0f), 640.0f / 480.0f, 0.1f, 100.0f, 
 													glm::vec3(0.0f,1.0f,0.0f), glm::vec3(0.0f,0.0f,0.0f));
 
-	m_drawData->m_camera->setPos(glm::vec3(0.0f, 25.0f, 30.0f));
+	m_drawData->m_camera->setPos(glm::vec3(0.0f, 0.0f, -2.0f));
 
 	return true;
 }

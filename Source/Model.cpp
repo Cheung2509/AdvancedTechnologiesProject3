@@ -11,11 +11,55 @@ Model::Model(const char * path) : GameObject3D()
 	loadModel(path);
 }
 
+void Model::tick(GameData * gameData)
+{
+	for (auto& mesh : m_meshes)
+	{
+		mesh->tick(gameData);
+	}
+}
+
 void Model::draw(DrawData * drawData)
 {
 	for (auto& mesh : m_meshes)
 	{
 		mesh->draw(drawData);
+	}
+}
+
+void Model::setPos(const glm::vec3 & newPos)
+{
+	m_pos = newPos;
+	for (auto& mesh : m_meshes)
+	{
+		mesh->setPos(m_pos);
+	}
+}
+
+void Model::setScale(const glm::vec3 & newScale)
+{
+	m_scale = newScale;
+	for (auto& mesh : m_meshes)
+	{
+		mesh->setScale(m_pos);
+	}
+}
+
+void Model::setColour(const glm::vec4 & colour)
+{
+	m_colour = colour;
+	for (auto& mesh : m_meshes)
+	{
+		mesh->setColour(colour);
+	}
+}
+
+void Model::rotate(const float & angle, const glm::vec3 & axis)
+{
+	m_rotation = glm::rotate(m_rotation, angle, axis);
+	for (auto& mesh : m_meshes)
+	{
+		mesh->rotate(angle, axis);
 	}
 }
 
@@ -40,10 +84,10 @@ void Model::processNode(aiNode * node, const aiScene * scene)
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
 	{
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+		
+		std::unique_ptr<Mesh> temp(processMesh(mesh, scene));
 
-		Mesh* m = processMesh(mesh, scene);
-		std::unique_ptr<Mesh> temp(m);
-		m_meshes.push_back(std::move(temp));
+		m_meshes.emplace_back(std::move(temp));
 	}
 
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
@@ -95,8 +139,10 @@ Mesh* Model::processMesh(aiMesh * mesh, const aiScene * scene)
 		vertices.push_back(vertex);
 	}
 
+	bones.resize(vertices.capacity());
+	boneInfo.resize(mesh->mNumBones);
 	//Load bones if there are bones in mesh
-	if (!mesh->HasBones())
+	if (mesh->HasBones())
 	{
 		for (unsigned int i = 0; i < mesh->mNumBones; i++)
 		{
@@ -105,9 +151,7 @@ Mesh* Model::processMesh(aiMesh * mesh, const aiScene * scene)
 
 			if (m_boneMapping.find(boneName) == m_boneMapping.end())
 			{
-				index = mesh->mNumBones;
-				BoneInfo bi;
-				boneInfo.push_back(bi);
+				index = mesh->mNumBones - 1;
 				boneInfo[index].m_boneOffset = mesh->mBones[i]->mOffsetMatrix;
 				m_boneMapping[boneName] = index;
 			}

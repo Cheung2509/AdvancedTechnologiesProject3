@@ -15,7 +15,14 @@ public:
 	Model() = default;
 	Model(const char* path);
 
+	virtual void tick(GameData* gameData) override;
 	virtual void draw(DrawData* drawData) override;
+
+	//Setters
+	void setPos(const glm::vec3& newPos);
+	void setScale(const glm::vec3& newScale);
+	void setColour(const glm::vec4& colour);
+	void rotate(const float& angle, const glm::vec3& axis);
 
 private:
 	void loadModel(const std::string& path);

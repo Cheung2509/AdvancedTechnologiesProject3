@@ -20,7 +20,8 @@ public:
 	Mesh() {}
 	Mesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, std::vector<Texture>& textures,
 		 std::unique_ptr<Shader> shader, std::vector<VertexBoneData>& bones, std::vector<BoneInfo>& boneInfo);
-
+	
+	void tick(GameData* gameData) override;
 	void draw(DrawData* drawData) override;
 
 private:
