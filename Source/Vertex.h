@@ -20,3 +20,27 @@ struct Texture
 	std::string m_type;
 	aiString m_path;
 };
+
+struct VertexBoneData
+{
+	unsigned int m_id[4];
+	float m_weights[4];
+
+	void addBoneData(unsigned int id, float weight)
+	{
+		for (auto& i : m_id)
+		{
+			if (m_weights[i] == 0.0f)
+			{
+				m_id[i] = id;
+				m_weights[i] = weight;
+			}
+		}
+	}
+};
+
+struct BoneInfo
+{
+	glm::mat4 m_boneOffset;
+	glm::mat4 m_finalTransform;
+};
