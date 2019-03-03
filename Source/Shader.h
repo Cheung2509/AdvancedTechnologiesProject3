@@ -18,6 +18,8 @@ public:
 	void setUniform4f(const std::string& name, float v0, float v1, float v2, float v3);
 	void setUniform4fv(const std::string& name, int count, bool transpose, glm::mat4& matrix);
 	int getUniformLocation(const std::string& name);
+
+	inline unsigned int getID() const { return m_rendererID; }
 private:
 	unsigned int compileShader(unsigned int type, const std::string& source);
 	const std::string parseShader(const std::string& filepath);

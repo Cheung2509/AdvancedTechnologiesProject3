@@ -24,7 +24,7 @@ struct Texture
 struct VertexBoneData
 {
 	unsigned int m_id[4];
-	unsigned int m_weights[4];
+	float m_weights[4];
 
 	void addBoneData(unsigned int id, float weight)
 	{
@@ -41,6 +41,6 @@ struct VertexBoneData
 
 struct BoneInfo
 {
-	aiMatrix4x4 m_boneOffset;
-	aiMatrix4x4 m_finalTransform;
+	glm::mat4 m_boneOffset;
+	glm::mat4 m_finalTransform;
 };

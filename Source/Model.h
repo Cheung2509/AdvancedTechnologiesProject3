@@ -1,7 +1,5 @@
 #pragma once
 
-#include <GL/glew.h>
-
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -14,6 +12,7 @@ class Model : public GameObject3D
 public:
 	Model() = default;
 	Model(const char* path);
+	~Model();
 
 	virtual void tick(GameData* gameData) override;
 	virtual void draw(DrawData* drawData) override;
@@ -27,16 +26,16 @@ public:
 private:
 	void loadModel(const std::string& path);
 	void processNode(aiNode* node, const aiScene* scene);
-	Mesh* processMesh(aiMesh* mesh, const aiScene* scene);
 
-	const std::vector<Texture> loadMaterialTexture(aiMaterial * mat, aiTextureType type, std::string typeName);
-	
-private:
+	void boneTransform(GameData* data);
+	void readNodeHierarchy(float animTime, const aiNode* node, const glm::mat4& parentTransform);
+	aiNodeAnim* findAnimNode(const aiAnimation* anim, const std::string& name);
+protected:
 	std::vector<std::unique_ptr<Mesh>> m_meshes;
 	std::string m_directory;
-	std::vector<Texture> m_texturesLoaded;
 
-	std::map<std::string, unsigned int> m_boneMapping;
+	std::shared_ptr<Shader> m_shader;
+
+	std::unique_ptr<aiScene> m_scene;
+	std::unique_ptr<Assimp::Importer> importer;
 };
-
-const int& loadTexture(const char* path, std::string directory);
