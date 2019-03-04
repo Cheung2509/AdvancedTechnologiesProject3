@@ -44,8 +44,8 @@ void Mesh::draw(DrawData * drawData)
 
 	// Draw mesh
 	glBindVertexArray(m_VAO);
-	
-	glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, nullptr);
 	glBindVertexArray(0);
 
 	//drawData->m_renderer->draw(*m_vertexArray, *m_indexBuffer, *m_shader);
@@ -68,18 +68,18 @@ void Mesh::processMesh(aiMesh* mesh, const aiScene * scene)
 	{
 		for (unsigned int j = 0; j < mesh->mFaces[i].mNumIndices; j++)
 		{
-			m_indices.push_back(*mesh->mFaces[i].mIndices);
+			m_indices.push_back(mesh->mFaces[i].mIndices[j]);
 		}
 	}
 
 	//Load bones if there are bones in mesh
 	if (mesh->HasBones())
 	{
-		for (int i = 0; i < mesh->mNumVertices; i++)
+		for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 		{
 			m_bones.emplace_back(VertexBoneData());
 		}
-		for (int i = 0; i < mesh->mNumBones; i++)
+		for (unsigned int i = 0; i < mesh->mNumBones; i++)
 		{
 			m_boneInfo.emplace_back(std::make_unique<BoneInfo>());
 		}

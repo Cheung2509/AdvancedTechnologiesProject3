@@ -11,19 +11,19 @@ out vec2 TexCoords;
 const int MAX_BONES = 100;
 
 uniform mat4 u_MVP;
-uniform mat4 gBones[MAX_BONES];
+uniform mat4 u_Bones[MAX_BONES];
 
 void main( )
 {
-//	mat4 BoneTransform = gBones[boneIDs[0]] * weights[0];
-//	BoneTransform +=  gBones[boneIDs[1]] * weights[1];
-//	BoneTransform +=  gBones[boneIDs[2]] * weights[2];
-//	BoneTransform +=  gBones[boneIDs[3]] * weights[3];
-//
-//	
-//	vec4 posL = BoneTransform * vec4(position, 1.0f);
-//    gl_Position = u_MVP * posL;
-	gl_Position = u_MVP * vec4(position, 1.0f);
+	mat4 BoneTransform = u_Bones[boneIDs[0]] * weights[0];
+	BoneTransform +=  u_Bones[boneIDs[1]] * weights[1];
+	BoneTransform +=  u_Bones[boneIDs[2]] * weights[2];
+	BoneTransform +=  u_Bones[boneIDs[3]] * weights[3];
+	
+		
+	vec4 posL = BoneTransform * vec4(position, 1.0f);
+	gl_Position = u_MVP * posL;
+
 
     TexCoords = texCoords;
 }

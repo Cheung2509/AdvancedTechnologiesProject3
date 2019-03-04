@@ -15,9 +15,9 @@ bool Game::init()
 
 	m_drawData = std::make_unique<DrawData>();
 	m_drawData->m_camera = std::make_shared<Camera>(glm::radians(45.0f), 640.0f / 480.0f, 0.1f, 1000.0f,
-													glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 25.0f));
+													glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 25.0f, 0.0f));
 
-	m_drawData->m_camera->setPos(glm::vec3(0.0f, -100.0f, 50.0f));
+	m_drawData->m_camera->setPos(glm::vec3(0.0f, -150.0f, 25.0f));
 
 	return true;
 }
@@ -25,6 +25,7 @@ bool Game::init()
 void Game::tick(const float& deltaTime, const Keyboard& keyboard, const Mouse& mouse)
 {
 	m_gameData->m_deltaTime = deltaTime;
+	m_gameData->m_runTime += deltaTime;
 	m_gameData->m_keyboard = keyboard;
 	m_gameData->m_mouse = mouse;
 

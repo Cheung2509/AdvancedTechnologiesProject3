@@ -8,6 +8,7 @@
 struct GameData
 {
 	float m_deltaTime;
+	float m_runTime = 0;
 	Keyboard m_keyboard;
 	Mouse m_mouse;
 };

@@ -80,12 +80,12 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <PreprocessorDefinitions>GLEW_STATIC</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLEW_STATIC</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)Source\Vendor;$(SolutionDir)Libs\glew\include;$(SolutionDir)Libs\ASSIMP\include;$(SolutionDir)Libs\SOIL2\include;$(SolutionDir)Libs\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>opengl32.lib;glew32s.lib;kernel32.lib;User32.lib;Gdi32.lib;shell32.lib;soil2-debug.lib;assimp-vc140-mt.lib;SDL2.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Libs\GLEW\lib\x86;$(SolutionDir)Libs\ASSIMP\lib;$(SolutionDir)Libs\SOIL2\lib;$(SolutionDir)Libs\SDL\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Libs\GLEW\lib\32bit;$(SolutionDir)Libs\GLEW\lib\x86;$(SolutionDir)Libs\ASSIMP\lib;$(SolutionDir)Libs\SOIL2\lib;$(SolutionDir)Libs\SDL\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -95,11 +95,11 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Source\Vendor;$(SolutionDir)Libs\glew\include;$(SolutionDir)Libs\ASSIMP\include;$(SolutionDir)Libs\SOIL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>GLEW_STATIC; _CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLEW_STATIC; _CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>opengl32.lib;glew32s.lib;kernel32.lib;User32.lib;Gdi32.lib;shell32.lib;assimp-vc140-mt.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Libs\GLEW\lib\x64;$(SolutionDir)Libs\ASSIMP\lib;$(SolutionDir)Libs\SDL\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Libs\GLEW\lib\64bit;$(SolutionDir)Libs\GLEW\lib\x64;$(SolutionDir)Libs\ASSIMP\lib;$(SolutionDir)Libs\SDL\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -111,13 +111,13 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Source\Vendor;$(SolutionDir)Libs\glew\include;$(SolutionDir)Libs\ASSIMP\include;$(SolutionDir)Libs\SOIL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>GLEW_STATIC</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLEW_STATIC</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>opengl32.lib;glew32s.lib;kernel32.lib;User32.lib;Gdi32.lib;shell32.lib;assimp-vc140-mt.lib;soil2-debug.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Libs\GLEW\lib;$(SolutionDir)Libs\ASSIMP\lib;$(SolutionDir)Libs\SOIL2\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Libs\GLEW\lib\32bit;$(SolutionDir)Libs\GLEW\lib;$(SolutionDir)Libs\ASSIMP\lib;$(SolutionDir)Libs\SOIL2\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -129,13 +129,13 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Source\Vendor;$(SolutionDir)Libs\glew\include;$(SolutionDir)Libs\ASSIMP\include;$(SolutionDir)Libs\SOIL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>GLEW_STATIC</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>opengl32.lib;glew32s.lib;kernel32.lib;User32.lib;Gdi32.lib;shell32.lib;assimp-vc140-mt.lib;soil2-debug.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Libs\GLEW\lib;$(SolutionDir)Libs\ASSIMP\lib;$(SolutionDir)Libs\SOIL2\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Libs\GLEW\lib\64bit;$(SolutionDir)Libs\GLEW\lib;$(SolutionDir)Libs\ASSIMP\lib;$(SolutionDir)Libs\SOIL2\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

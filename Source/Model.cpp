@@ -119,7 +119,7 @@ void Model::boneTransform(GameData * data)
 	float ticksPerSecond = (float)m_scene->mAnimations[0]->mTicksPerSecond != 0 ?
 		(float)m_scene->mAnimations[0]->mTicksPerSecond : 25.0f;
 
-	float timeInTick = data->m_deltaTime * ticksPerSecond;
+	float timeInTick = data->m_runTime * ticksPerSecond;
 	float animTime = (float)fmod(timeInTick, m_scene->mAnimations[0]->mDuration);
 
 	readNodeHierarchy(animTime, m_scene->mRootNode, glm::mat4(1.0f));
@@ -127,7 +127,7 @@ void Model::boneTransform(GameData * data)
 
 void Model::readNodeHierarchy(float animTime, const aiNode * node, const glm::mat4 & parentTransform)
 {
-	std::string name = node->mName.data;
+	const std::string name = node->mName.data;
 
 	glm::mat4 nodeTransform(glm::aiMatrix4x4ToGLM(node->mTransformation));
 	aiNodeAnim* animNode = findAnimNode(m_scene->mAnimations[0], name);
@@ -138,12 +138,12 @@ void Model::readNodeHierarchy(float animTime, const aiNode * node, const glm::ma
 		glm::mat4 scaleMat = glm::scale(glm::mat4(1.0f), scale);
 
 		glm::quat rotation = Mesh::calcInterpolatedRotation(animTime, animNode);
-		glm::mat4 rotationMat(rotation);
+		glm::mat4 rotMat(rotation);
 
 		glm::vec3 translation = Mesh::calcInterpolatedPosition(animTime, animNode);
 		glm::mat4 transMat = glm::translate(glm::mat4(1.0f), translation);
 
-		nodeTransform = transMat * rotationMat* scaleMat;
+		nodeTransform = transMat * rotMat* scaleMat;
 	}
 
 	glm::mat4 globalTransform = parentTransform * nodeTransform;
