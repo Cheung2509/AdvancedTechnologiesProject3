@@ -33,8 +33,8 @@ private:
 	void processMesh(aiMesh* mesh, const aiScene * scene);
 	void loadVertices(aiMesh* mesh);
 	void loadBones(aiMesh* mesh);
-	const std::vector<std::shared_ptr<Texture>> loadMaterialTexture(aiMaterial * mat,
-																	aiTextureType type, std::string typeName);
+	const std::vector<Texture> loadMaterialTexture(aiMaterial * mat,
+												   aiTextureType type, std::string typeName);
 
 	void initialiseMesh();
 private:
@@ -43,9 +43,9 @@ private:
 	std::vector<Vertex> m_vertices;
 	std::vector<unsigned int> m_indices;
 	std::vector<VertexBoneData> m_bones;
-	std::vector<std::unique_ptr<BoneInfo>> m_boneInfo;
-	std::vector<std::shared_ptr<Texture>> m_textures;
-	std::vector<std::shared_ptr<Texture>> m_texturesLoaded;
+	std::vector<BoneInfo> m_boneInfo;
+	std::vector<Texture> m_textures;
+	std::vector<Texture> m_texturesLoaded;
 
 	std::map<std::string, unsigned int> m_boneMapping;
 

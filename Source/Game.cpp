@@ -2,6 +2,7 @@
 
 #include "ErrorHandler.h"
 #include "Model.h"
+#include "Cube.h"
 #include "Helper.h"
 
 bool Game::init()

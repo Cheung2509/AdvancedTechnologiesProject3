@@ -81,10 +81,7 @@ void Model::rotate(const float & angle, const glm::vec3 & axis)
 void Model::loadModel(const std::string & path)
 {
 	importer = std::make_unique<Assimp::Importer>();
-	m_scene = std::make_unique<aiScene>(*(importer->ReadFile(path, aiProcess_Triangulate |
-										aiProcess_GenSmoothNormals |
-										aiProcess_FlipUVs |
-										aiProcess_JoinIdenticalVertices)));
+	m_scene = std::make_unique<aiScene>(*(importer->ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_OptimizeMeshes)));
 
 	if (!m_scene || m_scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !m_scene->mRootNode)
 	{
@@ -96,14 +93,12 @@ void Model::loadModel(const std::string & path)
 
 	processNode(m_scene->mRootNode, m_scene.get());
 }
-	
 
 void Model::processNode(aiNode * node, const aiScene * scene)
 {
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
 	{
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-
 
 		m_meshes.emplace_back(std::make_unique<Mesh>(mesh, scene, m_directory, m_shader));
 	}
