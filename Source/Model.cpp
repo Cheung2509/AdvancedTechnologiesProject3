@@ -89,6 +89,9 @@ void Model::loadModel(const std::string & path)
 		return;
 	}
 
+	m_globalInverseMatrix = glm::aiMatrix4x4ToGLM(m_scene->mRootNode->mTransformation);
+	m_globalInverseMatrix = glm::inverse(m_globalInverseMatrix);
+
 	m_directory = path.substr(0, path.find_last_of('/'));
 
 	processNode(m_scene->mRootNode, m_scene.get());
@@ -130,7 +133,7 @@ void Model::readNodeHierarchy(float animTime, const aiNode * node, const glm::ma
 	if (animNode != nullptr)
 	{
 		glm::vec3 scale = Mesh::calcInterpolatedScaling(animTime, animNode);
-		glm::mat4 scaleMat = glm::scale(glm::mat4(1.0f), scale);
+		glm::mat4 scaleMat = glm::scale(glm::mat4(1.0f) , scale);
 
 		glm::quat rotation = Mesh::calcInterpolatedRotation(animTime, animNode);
 		glm::mat4 rotMat(rotation);
@@ -145,7 +148,7 @@ void Model::readNodeHierarchy(float animTime, const aiNode * node, const glm::ma
 
 	for (auto& mesh : m_meshes)
 	{
-		mesh->setBoneTransform(globalTransform, name);
+		mesh->setBoneTransform(globalTransform, name, m_globalInverseMatrix);
 	}
 
 	for (unsigned int i = 0; i < node->mNumChildren; i++)

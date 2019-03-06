@@ -38,4 +38,6 @@ protected:
 
 	std::unique_ptr<aiScene> m_scene;
 	std::unique_ptr<Assimp::Importer> importer;
+
+	glm::mat4 m_globalInverseMatrix;
 };

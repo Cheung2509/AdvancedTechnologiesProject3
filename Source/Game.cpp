@@ -16,9 +16,9 @@ bool Game::init()
 
 	m_drawData = std::make_unique<DrawData>();
 	m_drawData->m_camera = std::make_shared<Camera>(glm::radians(45.0f), 640.0f / 480.0f, 0.1f, 1000.0f,
-													glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 25.0f, 0.0f));
+													glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 60.0f, 0.0f));
 
-	m_drawData->m_camera->setPos(glm::vec3(0.0f, -150.0f, 25.0f));
+	m_drawData->m_camera->setPos(glm::vec3(0.0f, -125.0f, 50.0f));
 
 	return true;
 }

@@ -6,6 +6,8 @@
 #include "ErrorHandler.h"
 #include "Vendor/SOIL2/SOIL2.h"
 
+#include "Vendor/glm/gtx/matrix_interpolation.hpp"
+
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -76,11 +78,7 @@ void Mesh::processMesh(aiMesh* mesh, const aiScene * scene)
 		{
 			m_bones.emplace_back(VertexBoneData());
 		}
-		for (unsigned int i = 0; i < mesh->mNumBones; i++)
-		{
-			m_boneInfo.emplace_back(BoneInfo());
-		}
-
+		m_boneInfo.reserve(mesh->mNumBones);
 		loadBones(mesh);
 	}
 
@@ -139,6 +137,7 @@ void Mesh::loadVertices(aiMesh * mesh)
 
 void Mesh::loadBones(aiMesh * mesh)
 {
+	unsigned int numBones = 0;
 	for (unsigned int i = 0; i < mesh->mNumBones; i++)
 	{
 		unsigned int index = 0;
@@ -146,15 +145,17 @@ void Mesh::loadBones(aiMesh * mesh)
 
 		if (m_boneMapping.find(boneName) == m_boneMapping.end())
 		{
-			index = mesh->mNumBones - 1;
+			index = numBones;
+			numBones++;
+			m_boneInfo.emplace_back(BoneInfo());
+			m_boneInfo[index].m_boneOffset = glm::aiMatrix4x4ToGLM(mesh->mBones[i]->mOffsetMatrix);
+
+			m_boneMapping[boneName] = index;
 		}
 		else
 		{
 			index = m_boneMapping[boneName];
 		}
-
-		m_boneMapping.emplace(std::make_pair(boneName, index));
-		m_boneInfo[index].m_boneOffset = glm::aiMatrix4x4ToGLM(mesh->mBones[i]->mOffsetMatrix);
 
 		for (unsigned int j = 0; j < mesh->mBones[i]->mNumWeights; j++)
 		{
@@ -211,11 +212,9 @@ void Mesh::initialiseMesh()
 	GLCALL(glGenBuffers(1, &boneBuffer));
 
 	GLCALL(glBindVertexArray(m_VAO));
-	// Load data into vertex buffers
+
+
 	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, m_VBO));
-	// A great thing about structs is that their memory layout is sequential for all its items.
-	// The effect is that we can simply pass a pointer to the struct and it translates perfectly to a glm::vec3/2 array which
-	// again translates to 3/2 floats which translates to a byte array.
 	GLCALL(glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(Vertex), &m_vertices[0], GL_STATIC_DRAW));
 	
 	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO));
@@ -247,11 +246,13 @@ void Mesh::initialiseMesh()
 	glBindVertexArray(0);
 }
 
-void Mesh::setBoneTransform(glm::mat4 & transform, const std::string name)
+void Mesh::setBoneTransform(const glm::mat4 & transform, const std::string name, 
+							const glm::mat4& inverseTransform)
 {
 	if (m_boneMapping.find(name) != m_boneMapping.end())
 	{
-		m_boneInfo[m_boneMapping[name]].m_finalTransform = transform * m_boneInfo[m_boneMapping[name]].m_boneOffset;
+		m_boneInfo[m_boneMapping[name]].m_finalTransform = inverseTransform * transform *
+			m_boneInfo[m_boneMapping[name]].m_boneOffset;
 	}
 }
 
@@ -270,6 +271,7 @@ const glm::vec3 Mesh::calcInterpolatedScaling(const float & animTime, const aiNo
 		if (animTime < (float)node->mScalingKeys[i + 1].mTime)
 		{
 			scalingIndex = i;
+			break;
 		}
 	}
 
@@ -279,8 +281,8 @@ const glm::vec3 Mesh::calcInterpolatedScaling(const float & animTime, const aiNo
 	float deltaTime = (float)(node->mScalingKeys[nextScalingIndex].mTime - node->mScalingKeys[scalingIndex].mTime);
 	float factor = (animTime - (float)node->mScalingKeys[scalingIndex].mTime) / deltaTime;
 	assert(factor >= 0.0f && factor <= 1.0f);
-	const glm::vec3 start = glm::aiVec3ToGLM(node->mScalingKeys[scalingIndex].mValue);
-	const glm::vec3 end = glm::aiVec3ToGLM(node->mScalingKeys[nextScalingIndex].mValue);
+	const glm::vec3& start = glm::aiVec3ToGLM(node->mScalingKeys[scalingIndex].mValue);
+	const glm::vec3& end = glm::aiVec3ToGLM(node->mScalingKeys[nextScalingIndex].mValue);
 	glm::vec3 delta = end - start;
 	return (start + factor * delta);
 }
@@ -299,19 +301,20 @@ const glm::quat Mesh::calcInterpolatedRotation(const float & animTime, const aiN
 		if (animTime < (float)node->mRotationKeys[i + 1].mTime)
 		{
 			rotationIndex = i;
+			break;
 		}
 	}
 	unsigned int nextRotationIndex = rotationIndex + 1;
 	assert(nextRotationIndex < node->mNumRotationKeys);
 	
-	float deltaTime = (float)(node->mRotationKeys[nextRotationIndex].mTime - node->mRotationKeys[rotationIndex].mTime);
+	float deltaTime = node->mRotationKeys[nextRotationIndex].mTime - node->mRotationKeys[rotationIndex].mTime;
 	float factor = (animTime - (float)node->mRotationKeys[rotationIndex].mTime) / deltaTime;
-	//assert(factor >= 0.0f && factor <= 1.0f);
+	assert(factor >= 0.0f && factor <= 1.0f);
 	const aiQuaternion& start = node->mRotationKeys[rotationIndex].mValue;
 	const aiQuaternion& end = node->mRotationKeys[nextRotationIndex].mValue;
 	aiQuaternion out;
 	aiQuaternion::Interpolate(out, start, end, factor);
-	return glm::normalize(glm::aiQuatToGLM(out));
+	return glm::aiQuatToGLM(out.Normalize());
 }
 
 const glm::vec3 Mesh::calcInterpolatedPosition(const float & animTime, const aiNodeAnim * node)
@@ -327,15 +330,16 @@ const glm::vec3 Mesh::calcInterpolatedPosition(const float & animTime, const aiN
 		if (animTime < (float)node->mPositionKeys[i + 1].mTime)
 		{
 			index = i;
+			break;
 		}
 	}
 	unsigned int nextIndex = index + 1;
 	assert(nextIndex < node->mNumPositionKeys);
 	float deltaTime = (float)(node->mPositionKeys[nextIndex].mTime - node->mPositionKeys[index].mTime);
 	float factor = (animTime - float(node->mPositionKeys[index].mTime)) / deltaTime;
-	//assert(factor >= 0.0f && factor <= 1.0f);
-	const glm::vec3 start = glm::aiVec3ToGLM(node->mPositionKeys[index].mValue);
-	const glm::vec3 end = glm::aiVec3ToGLM(node->mPositionKeys[nextIndex].mValue);
+	assert(factor >= 0.0f && factor <= 1.0f);
+	const glm::vec3& start = glm::aiVec3ToGLM(node->mPositionKeys[index].mValue);
+	const glm::vec3& end = glm::aiVec3ToGLM(node->mPositionKeys[nextIndex].mValue);
 	glm::vec3 delta = end - start;
 	return start + factor * delta;
 }

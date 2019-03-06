@@ -24,7 +24,8 @@ public:
 	void tick(GameData* gameData) override;
 	void draw(DrawData* drawData) override;
 	
-	void setBoneTransform(glm::mat4& transform, const std::string name);
+	void setBoneTransform(const glm::mat4& transform, const std::string name,
+						  const glm::mat4& inverseTransform);
 
 	static const glm::vec3 calcInterpolatedScaling(const float& animTime, const aiNodeAnim* node);
 	static const glm::quat calcInterpolatedRotation(const float& animTime, const aiNodeAnim* node);

@@ -28,7 +28,7 @@ struct VertexBoneData
 
 	void addBoneData(unsigned int id, float weight)
 	{
-		for (auto& i : m_id)
+		for (unsigned int i = 0; i < sizeof(id) / sizeof(unsigned int); i++)
 		{
 			if (m_weights[i] == 0.0f)
 			{
