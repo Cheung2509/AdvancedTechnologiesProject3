@@ -74,6 +74,7 @@ void Mesh::processMesh(aiMesh* mesh, const aiScene * scene)
 	//Load bones if there are bones in mesh
 	if (mesh->HasBones())
 	{
+		m_bones.reserve(m_vertices.size());
 		for (unsigned int i = 0; i < m_vertices.size(); i++)
 		{
 			m_bones.emplace_back(VertexBoneData());
@@ -234,7 +235,7 @@ void Mesh::initialiseMesh()
 	if (!m_bones.empty())
 	{
 		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, boneBuffer));
-		GLCALL(glBufferData(GL_ARRAY_BUFFER, sizeof(VertexBoneData) * m_bones.size(), &m_bones[0], GL_STATIC_DRAW));
+		GLCALL(glBufferData(GL_ARRAY_BUFFER, sizeof(m_bones[0]) * m_bones.size(), &m_bones[0], GL_STATIC_DRAW));
 		//Vertex boneID
 		GLCALL(glEnableVertexAttribArray(3));
 		GLCALL(glVertexAttribPointer(3, 4, GL_UNSIGNED_INT, GL_FALSE, sizeof(VertexBoneData), (GLvoid *)0));
@@ -341,7 +342,7 @@ const glm::vec3 Mesh::calcInterpolatedPosition(const float & animTime, const aiN
 	const glm::vec3& start = glm::aiVec3ToGLM(node->mPositionKeys[index].mValue);
 	const glm::vec3& end = glm::aiVec3ToGLM(node->mPositionKeys[nextIndex].mValue);
 	glm::vec3 delta = end - start;
-	return start + factor * delta;
+	return (start + factor * delta);
 }
 
 Mesh::Mesh(aiMesh* mesh, const aiScene* scene, std::string directory, std::shared_ptr<Shader> shader)

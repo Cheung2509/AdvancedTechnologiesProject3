@@ -6,6 +6,8 @@
 #include <assimp/matrix4x4.h>
 #include "Vendor/SOIL2/SOIL2.h"
 
+#include "glm/gtx/transform.hpp"
+
 #include "Helper.h"
 #include "GameData.h"
 
@@ -22,13 +24,18 @@ Model::~Model()
 
 void Model::tick(GameData * gameData)
 {
+	if (gameData->m_keyboard.keyIsPressed('E'))
+	{
+		rotate(1.0f * gameData->m_deltaTime, glm::vec3(0.0f, 0.0f, 1.0f));
+	}
+
 	for (auto& mesh : m_meshes)
 	{
+		mesh->tick(gameData);
 		if (m_scene->HasAnimations())
 		{
 			boneTransform(gameData);
 		}
-		mesh->tick(gameData);
 	}
 
 	GameObject3D::tick(gameData);
@@ -120,7 +127,7 @@ void Model::boneTransform(GameData * data)
 	float timeInTick = data->m_runTime * ticksPerSecond;
 	float animTime = (float)fmod(timeInTick, m_scene->mAnimations[0]->mDuration);
 
-	readNodeHierarchy(animTime, m_scene->mRootNode, glm::mat4(1.0f));
+	readNodeHierarchy(animTime, m_scene->mRootNode, glm::mat4(1));
 }
 
 void Model::readNodeHierarchy(float animTime, const aiNode * node, const glm::mat4 & parentTransform)
@@ -133,15 +140,12 @@ void Model::readNodeHierarchy(float animTime, const aiNode * node, const glm::ma
 	if (animNode != nullptr)
 	{
 		glm::vec3 scale = Mesh::calcInterpolatedScaling(animTime, animNode);
-		glm::mat4 scaleMat = glm::scale(glm::mat4(1.0f) , scale);
 
 		glm::quat rotation = Mesh::calcInterpolatedRotation(animTime, animNode);
-		glm::mat4 rotMat(rotation);
 
 		glm::vec3 translation = Mesh::calcInterpolatedPosition(animTime, animNode);
-		glm::mat4 transMat = glm::translate(glm::mat4(1.0f), translation);
 
-		nodeTransform = transMat * rotMat* scaleMat;
+		nodeTransform = glm::translate(translation) * glm::mat4(rotation) * glm::scale(scale);
 	}
 
 	glm::mat4 globalTransform = parentTransform * nodeTransform;
