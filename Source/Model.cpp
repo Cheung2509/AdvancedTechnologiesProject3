@@ -28,6 +28,10 @@ void Model::tick(GameData * gameData)
 	{
 		rotate(1.0f * gameData->m_deltaTime, glm::vec3(0.0f, 0.0f, 1.0f));
 	}
+	else if (gameData->m_keyboard.keyIsPressed('Q'))
+	{
+		rotate(-1.0f * gameData->m_deltaTime, glm::vec3(0.0f, 0.0f, 1.0f));
+	}
 
 	for (auto& mesh : m_meshes)
 	{
@@ -127,7 +131,7 @@ void Model::boneTransform(GameData * data)
 	float timeInTick = data->m_runTime * ticksPerSecond;
 	float animTime = (float)fmod(timeInTick, m_scene->mAnimations[0]->mDuration);
 
-	readNodeHierarchy(animTime, m_scene->mRootNode, glm::mat4(1));
+	readNodeHierarchy(animTime, m_scene->mRootNode, glm::mat4(1.0f));
 }
 
 void Model::readNodeHierarchy(float animTime, const aiNode * node, const glm::mat4 & parentTransform)
