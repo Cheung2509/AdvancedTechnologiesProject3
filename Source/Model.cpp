@@ -168,18 +168,20 @@ aiNodeAnim * Model::findAnimNode(const aiAnimation * anim, const std::string& na
 		//Returning cached node
 		return m_animNodes[name];
 	}
-
-	for (unsigned int i = 0; i < anim->mNumChannels; i++)
+	else
 	{
-		aiNodeAnim* pNodeAnim = anim->mChannels[i];
-
-		if (pNodeAnim)
+		for (unsigned int i = 0; i < anim->mNumChannels; i++)
 		{
-			if (pNodeAnim->mNodeName.data == name)
+			aiNodeAnim* pNodeAnim = anim->mChannels[i];
+
+			if (pNodeAnim)
 			{
-				//Cache the animation node if found
-				m_animNodes[name] = pNodeAnim;
-				return m_animNodes[name];
+				if (pNodeAnim->mNodeName.data == name)
+				{
+					//Cache the animation node if found
+					m_animNodes[name] = pNodeAnim;
+					return m_animNodes[name];
+				}
 			}
 		}
 	}
