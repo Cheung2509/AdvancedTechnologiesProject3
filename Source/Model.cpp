@@ -87,12 +87,12 @@ void Model::rotate(const float & angle, const glm::vec3 & axis)
 
 void Model::loadModel(const std::string & path)
 {
-	importer = std::make_unique<Assimp::Importer>();
-	m_scene = std::make_unique<aiScene>(*(importer->ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_OptimizeMeshes)));
+	m_importer = std::make_unique<Assimp::Importer>();
+	m_scene = std::make_unique<aiScene>(*(m_importer->ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_OptimizeMeshes)));
 
 	if (!m_scene || m_scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !m_scene->mRootNode)
 	{
-		std::cout << "ERROR: ASSIMP: " << importer->GetErrorString() << std::endl;
+		std::cout << "ERROR: ASSIMP: " << m_importer->GetErrorString() << std::endl;
 		return;
 	}
 
@@ -163,6 +163,12 @@ void Model::readNodeHierarchy(float animTime, const aiNode * node, const glm::ma
 
 aiNodeAnim * Model::findAnimNode(const aiAnimation * anim, const std::string& name)
 {
+	if (m_animNodes.find(name) != m_animNodes.end())
+	{
+		//Returning cached node
+		return m_animNodes[name];
+	}
+
 	for (unsigned int i = 0; i < anim->mNumChannels; i++)
 	{
 		aiNodeAnim* pNodeAnim = anim->mChannels[i];
@@ -171,7 +177,9 @@ aiNodeAnim * Model::findAnimNode(const aiAnimation * anim, const std::string& na
 		{
 			if (pNodeAnim->mNodeName.data == name)
 			{
-				return pNodeAnim;
+				//Cache the animation node if found
+				m_animNodes[name] = pNodeAnim;
+				return m_animNodes[name];
 			}
 		}
 	}

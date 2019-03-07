@@ -24,6 +24,5 @@ void main( )
 	vec4 posL = BoneTransform * vec4(position, 1.0f);
 	gl_Position = u_MVP * posL;
 
-
     TexCoords = texCoords;
 }

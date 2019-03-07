@@ -37,7 +37,9 @@ protected:
 	std::shared_ptr<Shader> m_shader;
 
 	std::unique_ptr<aiScene> m_scene;
-	std::unique_ptr<Assimp::Importer> importer;
+	std::unique_ptr<Assimp::Importer> m_importer;
+
+	std::map<std::string, aiNodeAnim*> m_animNodes;
 
 	glm::mat4 m_globalInverseMatrix;
 };
