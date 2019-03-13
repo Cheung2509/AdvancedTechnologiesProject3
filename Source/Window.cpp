@@ -69,7 +69,7 @@ bool Window::init(const wchar_t * className)
 	}
 
 	m_hWnd = CreateWindow((LPSTR)m_applicationName.c_str(), (LPSTR)m_applicationName.c_str(),
-						  WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 640, 480,
+						  WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 1280, 720,
 						  0, m_hMenu, m_hInstance, this);
 
 	m_hdc = GetDC(m_hWnd);
