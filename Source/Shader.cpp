@@ -4,6 +4,8 @@
 #include "GL/glew.h"
 #include "ErrorHandler.h"
 
+#include "glm/gtc/type_ptr.hpp"
+
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -30,12 +32,14 @@ void Shader::unbind() const
 
 void Shader::setUniform4f(const std::string & name, float v0, float v1, float v2, float v3)
 {
+	bind();
 	glUniform4f(getUniformLocation(name) , v0, v1, v2, v3);
 }
 
 void Shader::setUniform4fv(const std::string & name, int count , bool transpose, glm::mat4& matrix)
 {
-	glUniformMatrix4fv(getUniformLocation(name), count, transpose, &matrix[0][0]);
+	bind();
+	GLCALL(glUniformMatrix4fv(getUniformLocation(name), count, transpose, glm::value_ptr(matrix)));
 }
 
 int Shader::getUniformLocation(const std::string & name)
@@ -43,7 +47,7 @@ int Shader::getUniformLocation(const std::string & name)
 	if (m_uniformLocationCache.find(name) != m_uniformLocationCache.end())
 		return m_uniformLocationCache[name];
 
-	int location = glGetUniformLocation(m_rendererID, name.c_str());
+	GLCALL(int location = glGetUniformLocation(m_rendererID, name.c_str()));
 
 	m_uniformLocationCache[name] = location;
 

@@ -83,7 +83,7 @@ void Mesh::processMesh(aiMesh* mesh, const aiScene * scene)
 		loadBones(mesh);
 	}
 
-	//Proces materials
+	//Process materials
 	if (mesh->mMaterialIndex >= 0)
 	{
 		aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
@@ -139,27 +139,35 @@ void Mesh::loadVertices(aiMesh * mesh)
 void Mesh::loadBones(aiMesh * mesh)
 {
 	unsigned int numBones = 0;
+	// Loop through all bones
 	for (unsigned int i = 0; i < mesh->mNumBones; i++)
 	{
+		//Get the bone name
 		unsigned int index = 0;
 		std::string boneName(mesh->mBones[i]->mName.data);
 
+		//Check if bone name exists alread
 		if (m_boneMapping.find(boneName) == m_boneMapping.end())
 		{
+			//if not found create new boneInfo
 			index = numBones;
 			numBones++;
 			m_boneInfo.emplace_back(BoneInfo());
-			m_boneInfo[index].m_boneOffset = glm::aiMatrix4x4ToGLM(mesh->mBones[i]->mOffsetMatrix);
-
-			m_boneMapping[boneName] = index;
 		}
 		else
 		{
+			//If found set index
 			index = m_boneMapping[boneName];
 		}
 
+		//Apply it to bone mapping
+		m_boneMapping[boneName] = index;
+		m_boneInfo[index].m_boneOffset = glm::aiMatrix4x4ToGLM(mesh->mBones[i]->mOffsetMatrix);
+
+		//Loop through all weights
 		for (unsigned int j = 0; j < mesh->mBones[i]->mNumWeights; j++)
 		{
+			//Get vertex id and weight and add it to bone data
 			unsigned int id = mesh->mBones[i]->mWeights[j].mVertexId;
 			float weight = mesh->mBones[i]->mWeights[j].mWeight;
 			m_bones[id].addBoneData(index, weight);
@@ -235,7 +243,7 @@ void Mesh::initialiseMesh()
 	if (!m_bones.empty())
 	{
 		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, boneBuffer));
-		GLCALL(glBufferData(GL_ARRAY_BUFFER, sizeof(m_bones[0]) * m_bones.size(), &m_bones[0], GL_STATIC_DRAW));
+		GLCALL(glBufferData(GL_ARRAY_BUFFER, sizeof(VertexBoneData) * m_bones.size(), &m_bones[0], GL_STATIC_DRAW));
 		//Vertex boneID
 		GLCALL(glEnableVertexAttribArray(3));
 		GLCALL(glVertexAttribPointer(3, 4, GL_UNSIGNED_INT, GL_FALSE, sizeof(VertexBoneData), (GLvoid *)0));

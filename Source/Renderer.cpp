@@ -83,6 +83,8 @@ const bool Renderer::init(HWND& hWnd)
 	
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+	wglSwapIntervalEXT(0);
+
 	//If all initalization suceeded return true
 	return true;
 }

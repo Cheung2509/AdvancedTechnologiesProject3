@@ -125,12 +125,14 @@ void Model::processNode(aiNode * node, const aiScene * scene)
 
 void Model::boneTransform(GameData * data)
 {
+	//Get the animation time
 	float ticksPerSecond = (float)m_scene->mAnimations[0]->mTicksPerSecond != 0 ?
 		(float)m_scene->mAnimations[0]->mTicksPerSecond : 25.0f;
 
 	float timeInTick = data->m_runTime * ticksPerSecond;
 	float animTime = (float)fmod(timeInTick, m_scene->mAnimations[0]->mDuration);
 
+	//Now start getting the transforms for the bones
 	readNodeHierarchy(animTime, m_scene->mRootNode, glm::mat4(1.0f));
 }
 
@@ -138,7 +140,9 @@ void Model::readNodeHierarchy(float animTime, const aiNode * node, const glm::ma
 {
 	const std::string name = node->mName.data;
 
+	//get the node transform
 	glm::mat4 nodeTransform(glm::aiMatrix4x4ToGLM(node->mTransformation));
+	//find the animation nodes
 	aiNodeAnim* animNode = findAnimNode(m_scene->mAnimations[0], name);
 
 	if (animNode != nullptr)
@@ -167,6 +171,7 @@ void Model::readNodeHierarchy(float animTime, const aiNode * node, const glm::ma
 
 aiNodeAnim * Model::findAnimNode(const aiAnimation * anim, const std::string& name)
 {
+	//Find if the node has been used once
 	if (m_animNodes.find(name) != m_animNodes.end())
 	{
 		//Returning cached node
@@ -174,6 +179,7 @@ aiNodeAnim * Model::findAnimNode(const aiAnimation * anim, const std::string& na
 	}
 	else
 	{
+		//If not find the node
 		for (unsigned int i = 0; i < anim->mNumChannels; i++)
 		{
 			aiNodeAnim* pNodeAnim = anim->mChannels[i];
@@ -190,5 +196,6 @@ aiNodeAnim * Model::findAnimNode(const aiAnimation * anim, const std::string& na
 		}
 	}
 
+	m_animNodes[name] = nullptr;
 	return nullptr;
 }

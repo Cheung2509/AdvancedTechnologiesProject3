@@ -95,10 +95,10 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Source\Vendor;$(SolutionDir)Libs\glew\include;$(SolutionDir)Libs\ASSIMP\include;$(SolutionDir)Libs\SOIL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLEW_STATIC; _CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS; _CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>opengl32.lib;glew32s.lib;kernel32.lib;User32.lib;Gdi32.lib;shell32.lib;assimp-vc140-mt.lib</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;kernel32.lib;User32.lib;Gdi32.lib;shell32.lib;assimp-vc140-mt.lib;</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)Libs\GLEW\lib\64bit;$(SolutionDir)Libs\ASSIMP\lib\64bit;$(SolutionDir)Libs\GLEW\lib\x64;$(SolutionDir)Libs\ASSIMP\lib;$(SolutionDir)Libs\SDL\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -129,12 +129,12 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Source\Vendor;$(SolutionDir)Libs\glew\include;$(SolutionDir)Libs\ASSIMP\include;$(SolutionDir)Libs\SOIL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>opengl32.lib;glew32s.lib;kernel32.lib;User32.lib;Gdi32.lib;shell32.lib;assimp-vc140-mt.lib;soil2-debug.lib</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;kernel32.lib;User32.lib;Gdi32.lib;shell32.lib;assimp-vc140-mt.lib;soil2-debug.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)Libs\GLEW\lib\64bit;$(SolutionDir)Libs\ASSIMP\lib\64bit;$(SolutionDir)Libs\GLEW\lib;$(SolutionDir)Libs\ASSIMP\lib;$(SolutionDir)Libs\SOIL2\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>

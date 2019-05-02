@@ -17,7 +17,6 @@ const bool Application::initialize(const wchar_t* className)
 {
 	m_window.init(className);
 
-#if _DEBUG == 1
 	//Initiate console for debugging
 	if (!AllocConsole())
 	{
@@ -26,7 +25,6 @@ const bool Application::initialize(const wchar_t* className)
 
 	std::ofstream console_out("CONOUT$");
 	std::cout.rdbuf(console_out.rdbuf());
-#endif
 	 
 	m_renderer = std::make_shared<Renderer>();
 	m_renderer->init(m_window.getHWND());

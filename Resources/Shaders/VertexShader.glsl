@@ -13,7 +13,7 @@ const int MAX_BONES = 100;
 uniform mat4 u_MVP;
 uniform mat4 u_Bones[MAX_BONES];
 
-void main( )
+void main()
 {
 	mat4 BoneTransform = u_Bones[boneIDs[0]] * weights[0];
 	BoneTransform +=  u_Bones[boneIDs[1]] * weights[1];
