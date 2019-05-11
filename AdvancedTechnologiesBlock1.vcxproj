@@ -447,6 +447,14 @@
     <ClInclude Include="Source\Vendor\SOIL2\stbi_pvr_c.h" />
     <ClInclude Include="Source\Vendor\SOIL2\stb_image.h" />
     <ClInclude Include="Source\Vendor\SOIL2\stb_image_write.h" />
+    <ClInclude Include="Source\Vendor\spdlog\async.h" />
+    <ClInclude Include="Source\Vendor\spdlog\async_logger.h" />
+    <ClInclude Include="Source\Vendor\spdlog\common.h" />
+    <ClInclude Include="Source\Vendor\spdlog\formatter.h" />
+    <ClInclude Include="Source\Vendor\spdlog\logger.h" />
+    <ClInclude Include="Source\Vendor\spdlog\spdlog.h" />
+    <ClInclude Include="Source\Vendor\spdlog\tweakme.h" />
+    <ClInclude Include="Source\Vendor\spdlog\version.h" />
     <ClInclude Include="Source\Vertex.h" />
     <ClInclude Include="Source\VertexArray.h" />
     <ClInclude Include="Source\VertexBuffer.h" />

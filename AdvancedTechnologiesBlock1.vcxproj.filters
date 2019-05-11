@@ -46,6 +46,9 @@
     <Filter Include="Vendor\SOIL2">
       <UniqueIdentifier>{b6a8f1d7-92d9-4754-af98-562ebb11ca72}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Vendor\SPDLog">
+      <UniqueIdentifier>{e3e7c425-58be-4636-9c9b-cfef346c714e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Vendor\glm\detail\glm.cpp">
@@ -982,6 +985,30 @@
     </ClInclude>
     <ClInclude Include="Source\Vendor\SOIL2\stbi_pvr_c.h">
       <Filter>Vendor\SOIL2</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Vendor\spdlog\version.h">
+      <Filter>Vendor\SPDLog</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Vendor\spdlog\tweakme.h">
+      <Filter>Vendor\SPDLog</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Vendor\spdlog\spdlog.h">
+      <Filter>Vendor\SPDLog</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Vendor\spdlog\logger.h">
+      <Filter>Vendor\SPDLog</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Vendor\spdlog\formatter.h">
+      <Filter>Vendor\SPDLog</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Vendor\spdlog\common.h">
+      <Filter>Vendor\SPDLog</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Vendor\spdlog\async_logger.h">
+      <Filter>Vendor\SPDLog</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Vendor\spdlog\async.h">
+      <Filter>Vendor\SPDLog</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

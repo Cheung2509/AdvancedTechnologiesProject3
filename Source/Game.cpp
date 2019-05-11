@@ -48,8 +48,6 @@ void Game::draw(std::shared_ptr<Renderer> renderer)
 {
 	renderer->clear();
 
-	m_drawData->m_renderer = renderer;
-
 	for (auto& object : m_gameObjects)
 	{
 		object->draw(m_drawData.get());

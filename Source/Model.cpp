@@ -6,7 +6,10 @@
 #include <assimp/matrix4x4.h>
 #include "Vendor/SOIL2/SOIL2.h"
 
+#include "spdlog/spdlog.h"
+
 #include "glm/gtx/transform.hpp"
+#include "glm/gtx/common.hpp"
 
 #include "Helper.h"
 #include "GameData.h"
@@ -31,6 +34,24 @@ void Model::tick(GameData * gameData)
 	else if (gameData->m_keyboard.keyIsPressed('Q'))
 	{
 		rotate(-1.0f * gameData->m_deltaTime, glm::vec3(0.0f, 0.0f, 1.0f));
+	}
+
+	if(gameData->m_keyboard.keyIsPressed('W'))
+	{
+		rotate(1.0f * gameData->m_deltaTime, glm::vec3(1.0f, 0.0f, 0.0f));
+	}
+	else if(gameData->m_keyboard.keyIsPressed('S'))
+	{
+		rotate(-1.0f * gameData->m_deltaTime, glm::vec3(1.0f, 0.0f, 0.0f));
+	}
+
+	if(gameData->m_keyboard.keyIsPressed('A'))
+	{
+		setPos(m_pos + glm::vec3(-5.0f, 0.0f, 0.0f) *gameData->m_deltaTime);
+	}
+	else if(gameData->m_keyboard.keyIsPressed('D'))
+	{
+		setPos(m_pos + glm::vec3(5.0f, 0.0f, 0.0f) *gameData->m_deltaTime);
 	}
 
 	for (auto& mesh : m_meshes)
@@ -100,8 +121,7 @@ void Model::loadModel(const std::string & path)
 		return;
 	}
 
-	m_globalInverseMatrix = glm::aiMatrix4x4ToGLM(m_scene->mRootNode->mTransformation);
-	m_globalInverseMatrix = glm::inverse(m_globalInverseMatrix);
+	m_globalInverseMatrix = glm::inverse(glm::aiMatrix4x4ToGLM(m_scene->mRootNode->mTransformation));
 
 	m_directory = path.substr(0, path.find_last_of('/'));
 
@@ -130,13 +150,13 @@ void Model::boneTransform(GameData * data)
 		(float)m_scene->mAnimations[0]->mTicksPerSecond : 25.0f;
 
 	float timeInTick = data->m_runTime * ticksPerSecond;
-	float animTime = (float)fmod(timeInTick, m_scene->mAnimations[0]->mDuration);
+	float animTime = glm::fmod(timeInTick, (float)m_scene->mAnimations[0]->mDuration);
 
 	//Now start getting the transforms for the bones
 	readNodeHierarchy(animTime, m_scene->mRootNode, glm::mat4(1.0f));
 }
 
-void Model::readNodeHierarchy(float animTime, const aiNode * node, const glm::mat4 & parentTransform)
+void Model::readNodeHierarchy(const float animTime, const aiNode * node, const glm::mat4& parentTransform)
 {
 	const std::string name = node->mName.data;
 
@@ -147,13 +167,13 @@ void Model::readNodeHierarchy(float animTime, const aiNode * node, const glm::ma
 
 	if (animNode != nullptr)
 	{
-		glm::vec3 scale = Mesh::calcInterpolatedScaling(animTime, animNode);
+		glm::mat4 scale = glm::scale(Mesh::calcInterpolatedScaling(animTime, animNode));
 
-		glm::quat rotation = Mesh::calcInterpolatedRotation(animTime, animNode);
+		glm::mat4 rotation = glm::mat4_cast(Mesh::calcInterpolatedRotation(animTime, animNode));
 
 		glm::vec3 translation = Mesh::calcInterpolatedPosition(animTime, animNode);
 
-		nodeTransform = glm::translate(translation) * glm::mat4(rotation) * glm::scale(scale);
+		nodeTransform = glm::translate(translation) * rotation * scale;
 	}
 
 	glm::mat4 globalTransform = parentTransform * nodeTransform;

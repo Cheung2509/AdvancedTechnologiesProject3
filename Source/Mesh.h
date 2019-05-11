@@ -40,10 +40,10 @@ private:
 	void initialiseMesh();
 private:
 	std::string m_directory;
+	bool m_animate = true;
 
 	std::vector<Vertex> m_vertices;
 	std::vector<unsigned int> m_indices;
-	std::vector<VertexBoneData> m_bones;
 	std::vector<BoneInfo> m_boneInfo;
 	std::vector<Texture> m_textures;
 	std::vector<Texture> m_texturesLoaded;
@@ -51,7 +51,6 @@ private:
 	std::map<std::string, unsigned int> m_boneMapping;
 
 	unsigned int m_VAO, m_VBO, EBO;
-	unsigned int boneBuffer;
 
 	std::shared_ptr<Shader> m_shader;
 };

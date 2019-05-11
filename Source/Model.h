@@ -28,7 +28,7 @@ private:
 	void processNode(aiNode* node, const aiScene* scene);
 
 	void boneTransform(GameData* data);
-	void readNodeHierarchy(float animTime, const aiNode* node, const glm::mat4& parentTransform);
+	void readNodeHierarchy(const float animTime, const aiNode* node, const glm::mat4& parentTransform);
 	aiNodeAnim* findAnimNode(const aiAnimation* anim, const std::string& name);
 protected:
 	std::vector<std::unique_ptr<Mesh>> m_meshes;

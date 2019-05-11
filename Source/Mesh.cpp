@@ -15,6 +15,10 @@
 
 void Mesh::tick(GameData * gameData)
 {
+	if(gameData->m_keyboard.keyIsPressed('Z'))
+	{
+		m_animate = !m_animate;
+	}
 	GameObject3D::tick(gameData);
 }
 
@@ -30,6 +34,8 @@ void Mesh::draw(DrawData * drawData)
 		GLCALL(glBindTexture(GL_TEXTURE_2D, m_textures[i].m_id));
 	}
 	
+	m_shader->setBool("u_useAnimations", m_animate);
+
 	glm::mat4 mvp = drawData->m_camera->getProjection() * drawData->m_camera->getView() *
 		m_worldMatrix;
 	m_shader->setUniform4fv("u_MVP", 1, GL_FALSE, mvp);
@@ -74,12 +80,6 @@ void Mesh::processMesh(aiMesh* mesh, const aiScene * scene)
 	//Load bones if there are bones in mesh
 	if (mesh->HasBones())
 	{
-		m_bones.reserve(m_vertices.size());
-		for (unsigned int i = 0; i < m_vertices.size(); i++)
-		{
-			m_bones.emplace_back(VertexBoneData());
-		}
-		m_boneInfo.reserve(mesh->mNumBones);
 		loadBones(mesh);
 	}
 
@@ -138,7 +138,8 @@ void Mesh::loadVertices(aiMesh * mesh)
 
 void Mesh::loadBones(aiMesh * mesh)
 {
-	unsigned int numBones = 0;
+	m_boneInfo.reserve(mesh->mNumBones);
+
 	// Loop through all bones
 	for (unsigned int i = 0; i < mesh->mNumBones; i++)
 	{
@@ -150,9 +151,12 @@ void Mesh::loadBones(aiMesh * mesh)
 		if (m_boneMapping.find(boneName) == m_boneMapping.end())
 		{
 			//if not found create new boneInfo
-			index = numBones;
-			numBones++;
-			m_boneInfo.emplace_back(BoneInfo());
+			index = i;
+			m_boneInfo.push_back(BoneInfo());
+
+			//Apply it to bone mapping
+			m_boneMapping[boneName] = index;
+			m_boneInfo[index].m_boneOffset = glm::aiMatrix4x4ToGLM(mesh->mBones[i]->mOffsetMatrix);
 		}
 		else
 		{
@@ -160,17 +164,13 @@ void Mesh::loadBones(aiMesh * mesh)
 			index = m_boneMapping[boneName];
 		}
 
-		//Apply it to bone mapping
-		m_boneMapping[boneName] = index;
-		m_boneInfo[index].m_boneOffset = glm::aiMatrix4x4ToGLM(mesh->mBones[i]->mOffsetMatrix);
-
 		//Loop through all weights
 		for (unsigned int j = 0; j < mesh->mBones[i]->mNumWeights; j++)
 		{
 			//Get vertex id and weight and add it to bone data
 			unsigned int id = mesh->mBones[i]->mWeights[j].mVertexId;
 			float weight = mesh->mBones[i]->mWeights[j].mWeight;
-			m_bones[id].addBoneData(index, weight);
+			m_vertices[id].addBoneData(index, weight);
 		}
 	}
 }
@@ -218,14 +218,13 @@ void Mesh::initialiseMesh()
 	GLCALL(glGenVertexArrays(1, &m_VAO));
 	GLCALL(glGenBuffers(1, &m_VBO));
 	GLCALL(glGenBuffers(1, &EBO));
-	GLCALL(glGenBuffers(1, &boneBuffer));
 
 	GLCALL(glBindVertexArray(m_VAO));
 
 
 	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, m_VBO));
 	GLCALL(glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(Vertex), &m_vertices[0], GL_STATIC_DRAW));
-	
+
 	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO));
 	GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size() * sizeof(GLuint), &m_indices[0], GL_STATIC_DRAW));
 
@@ -240,17 +239,12 @@ void Mesh::initialiseMesh()
 	GLCALL(glEnableVertexAttribArray(2));
 	GLCALL(glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid *)offsetof(Vertex, m_textureCoords)));
 
-	if (!m_bones.empty())
-	{
-		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, boneBuffer));
-		GLCALL(glBufferData(GL_ARRAY_BUFFER, sizeof(VertexBoneData) * m_bones.size(), &m_bones[0], GL_STATIC_DRAW));
-		//Vertex boneID
-		GLCALL(glEnableVertexAttribArray(3));
-		GLCALL(glVertexAttribPointer(3, 4, GL_UNSIGNED_INT, GL_FALSE, sizeof(VertexBoneData), (GLvoid *)0));
-		//Vertex BoneWeight
-		GLCALL(glEnableVertexAttribArray(4));
-		GLCALL(glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(VertexBoneData), (GLvoid *)offsetof(VertexBoneData, m_weights)));
-	}
+	//Bone Ids 
+	GLCALL(glEnableVertexAttribArray(3));
+	GLCALL(glVertexAttribPointer(3, 4, GL_UNSIGNED_INT, GL_FALSE, sizeof(Vertex), (GLvoid *)offsetof(Vertex, m_id)));
+	//Bone weights
+	GLCALL(glEnableVertexAttribArray(4));
+	GLCALL(glVertexAttribPointer(4, 4, GL_UNSIGNED_INT, GL_FALSE, sizeof(Vertex), (GLvoid *)offsetof(Vertex, m_weights)));
 
 	glBindVertexArray(0);
 }
@@ -316,7 +310,7 @@ const glm::quat Mesh::calcInterpolatedRotation(const float & animTime, const aiN
 	unsigned int nextRotationIndex = rotationIndex + 1;
 	assert(nextRotationIndex < node->mNumRotationKeys);
 	
-	float deltaTime = node->mRotationKeys[nextRotationIndex].mTime - node->mRotationKeys[rotationIndex].mTime;
+	float deltaTime = (float)node->mRotationKeys[nextRotationIndex].mTime - (float)node->mRotationKeys[rotationIndex].mTime;
 	float factor = (animTime - (float)node->mRotationKeys[rotationIndex].mTime) / deltaTime;
 	assert(factor >= 0.0f && factor <= 1.0f);
 	const aiQuaternion& start = node->mRotationKeys[rotationIndex].mValue;
