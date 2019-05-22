@@ -19,17 +19,13 @@ class Mesh : public GameObject3D
 {
 public:
 	Mesh() {}
-	Mesh(aiMesh* mesh, const aiScene* scene, std::string directory, std::shared_ptr<Shader> shader);
+	Mesh(aiMesh* mesh, const aiScene* scene, std::string directory);
 	
 	void tick(GameData* gameData) override;
 	void draw(DrawData* drawData) override;
 	
-	void setBoneTransform(const glm::mat4& transform, const std::string name,
+	void setBoneTransform(const glm::mat4& transform, const std::string& name,
 						  const glm::mat4& inverseTransform);
-
-	static const glm::vec3 calcInterpolatedScaling(const float& animTime, const aiNodeAnim* node);
-	static const glm::quat calcInterpolatedRotation(const float& animTime, const aiNodeAnim* node);
-	static const glm::vec3 calcInterpolatedPosition(const float& animTime, const aiNodeAnim* node);
 private:
 	void processMesh(aiMesh* mesh, const aiScene * scene);
 	void loadVertices(aiMesh* mesh);
@@ -41,6 +37,7 @@ private:
 private:
 	std::string m_directory;
 	bool m_animate = true;
+	bool m_textured = true;
 
 	std::vector<Vertex> m_vertices;
 	std::vector<unsigned int> m_indices;
@@ -52,7 +49,7 @@ private:
 
 	unsigned int m_VAO, m_VBO, EBO;
 
-	std::shared_ptr<Shader> m_shader;
+	std::unique_ptr<Shader> m_shader;
 };
 
 const unsigned int loadTexture(const char* path, std::string directory);

@@ -28,8 +28,16 @@ private:
 	void processNode(aiNode* node, const aiScene* scene);
 
 	void boneTransform(GameData* data);
-	void readNodeHierarchy(const float animTime, const aiNode* node, const glm::mat4& parentTransform);
+	void readNodeHierarchy(const float animTime, const aiNode* node, const glm::mat4 parentTransform);
 	aiNodeAnim* findAnimNode(const aiAnimation* anim, const std::string& name);
+
+	const aiVector3D calcInterpolatedScaling(const float& animTime, const aiNodeAnim* node);
+	const aiQuaternion calcInterpolatedRotation(const float& animTime, const aiNodeAnim* node);
+	const aiVector3D calcInterpolatedPosition(const float& animTime, const aiNodeAnim* node);
+
+	const unsigned int findScaling(const float& animTime, const aiNodeAnim* node);
+	const unsigned int findPosition(const float& animTime, const aiNodeAnim* node);
+	const unsigned int findRotation(const float& animTime, const aiNodeAnim* node);
 protected:
 	std::vector<std::unique_ptr<Mesh>> m_meshes;
 	std::string m_directory;

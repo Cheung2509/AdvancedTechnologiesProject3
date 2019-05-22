@@ -4,6 +4,8 @@
 #include "GL/glew.h"
 #include "ErrorHandler.h"
 
+#include "spdlog/spdlog.h"
+
 #include "glm/gtc/type_ptr.hpp"
 
 #include <fstream>
@@ -32,21 +34,20 @@ void Shader::unbind() const
 
 void Shader::setBool(const std::string & name, bool v0)
 {
-	bind();
 	GLCALL(glUniform1i(getUniformLocation(name), v0));
 }
 
 void Shader::setUniform4f(const std::string & name, float v0, float v1, float v2, float v3)
 {
-	bind();
 	glUniform4f(getUniformLocation(name) , v0, v1, v2, v3);
 }
 
 void Shader::setUniform4fv(const std::string & name, int count , bool transpose, glm::mat4& matrix)
 {
-	bind();
 	GLCALL(glUniformMatrix4fv(getUniformLocation(name), count, transpose, glm::value_ptr(matrix)));
 }
+
+
 
 int Shader::getUniformLocation(const std::string & name)
 {
@@ -56,6 +57,11 @@ int Shader::getUniformLocation(const std::string & name)
 	GLCALL(int location = glGetUniformLocation(m_rendererID, name.c_str()));
 
 	m_uniformLocationCache[name] = location;
+
+	if(location == -1)
+	{
+		spdlog::warn("no Location");
+	}
 
 	return location;
 }
@@ -115,9 +121,10 @@ unsigned int Shader::compileShader(unsigned int type, const std::string& source)
 		char* message = (char*)alloca(length * sizeof(char));
 		glGetShaderInfoLog(id, length, &length, message);
 
-		std::cout << "Failed to compile " << (type == GL_VERTEX_SHADER ? "vertex" : "fragment") << std::endl;
+		std::string nType = (type == GL_VERTEX_SHADER ? "vertex" : "fragment");
+		spdlog::error("Failed to compile " + nType);
 
-		std::cout << message << std::endl;
+		spdlog::error(message);
 
 		glDeleteShader(id);
 

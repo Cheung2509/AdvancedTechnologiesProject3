@@ -463,7 +463,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\FragmentShader.frag" />
-    <None Include="Resources\Shaders\VertexShader.glsl" />
+    <None Include="Resources\Shaders\VertexShader.vert" />
     <None Include="Source\Vendor\glm\detail\func_common.inl" />
     <None Include="Source\Vendor\glm\detail\func_common_simd.inl" />
     <None Include="Source\Vendor\glm\detail\func_exponential.inl" />

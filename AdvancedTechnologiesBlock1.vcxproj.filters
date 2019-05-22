@@ -1012,9 +1012,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Shaders\VertexShader.glsl">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="Source\Vendor\glm\gtx\associated_min_max.inl">
       <Filter>Vendor\GLM</Filter>
     </None>
@@ -1403,6 +1400,9 @@
       <Filter>Vendor\GLM</Filter>
     </None>
     <None Include="Resources\Shaders\FragmentShader.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\Shaders\VertexShader.vert">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
