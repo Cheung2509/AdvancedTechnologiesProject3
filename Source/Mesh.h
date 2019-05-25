@@ -12,6 +12,7 @@
 #include "VertexArray.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
+#include "Texture.h"
 #include "GameObject3D.h"
 #include "Shader.h"
 
@@ -30,7 +31,7 @@ private:
 	void processMesh(aiMesh* mesh, const aiScene * scene);
 	void loadVertices(aiMesh* mesh);
 	void loadBones(aiMesh* mesh);
-	const std::vector<Texture> loadMaterialTexture(aiMaterial * mat,
+	const std::vector<Texture*> loadMaterialTexture(aiMaterial * mat,
 												   aiTextureType type, std::string typeName);
 
 	void initialiseMesh();
@@ -42,12 +43,14 @@ private:
 	std::vector<Vertex> m_vertices;
 	std::vector<unsigned int> m_indices;
 	std::vector<BoneInfo> m_boneInfo;
-	std::vector<Texture> m_textures;
-	std::vector<Texture> m_texturesLoaded;
+	std::vector<Texture*> m_textures;
+	static std::vector<std::unique_ptr<Texture>> m_texturesLoaded;
 
 	std::map<std::string, unsigned int> m_boneMapping;
 
-	unsigned int m_VAO, m_VBO, EBO;
+	std::unique_ptr<VertexArray> m_VA;
+	std::unique_ptr<VertexBuffer> m_VB;
+	std::unique_ptr<IndexBuffer> m_IB;
 
 	std::unique_ptr<Shader> m_shader;
 };

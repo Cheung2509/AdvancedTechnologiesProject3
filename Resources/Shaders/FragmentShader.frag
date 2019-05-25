@@ -6,14 +6,14 @@ in vec4 oWeights;
 
 out vec4 color;
 
-uniform sampler2D texture_diffuse;
+uniform sampler2D u_texture;
 uniform bool u_textured;
 
 void main( )
 {
 	if(u_textured)
 	{
-		color = vec4( texture( texture_diffuse, TexCoords ));
+		color = vec4( texture( u_texture, TexCoords ));
 	}
 	else
 	{

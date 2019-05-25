@@ -13,6 +13,7 @@
 #include <sstream>
 #include <iostream>
 
+std::vector<std::unique_ptr<Texture>> Mesh::m_texturesLoaded = std::vector<std::unique_ptr<Texture>>();
 
 void Mesh::tick(GameData * gameData)
 {
@@ -30,19 +31,15 @@ void Mesh::tick(GameData * gameData)
 
 void Mesh::draw(DrawData * drawData)
 {
-	m_shader->bind();
 	if(m_textured)
 	{
-		unsigned int diffuseNr = 1;
-		unsigned int specularNr = 1;
 		for(unsigned int i = 0; i < m_textures.size(); i++)
 		{
-			GLCALL(glActiveTexture(GL_TEXTURE0 + i)); // Active proper texture unit before binding
-
-			// And finally bind the texture
-			GLCALL(glBindTexture(GL_TEXTURE_2D, m_textures[i].m_id));
+			m_textures[i]->bind(i);
 		}
 	}
+
+	m_shader->bind();
 
 	//Send uniform information to GPU
 	m_shader->setBool("u_textured", m_textured);
@@ -53,32 +50,23 @@ void Mesh::draw(DrawData * drawData)
 		m_worldMatrix;
 	m_shader->setUniform4fv("u_MVP", 1, GL_FALSE, mvp);
 
-	for(int i = 0; i < m_boneInfo.size(); i++)
+	std::vector<glm::mat4> transforms;
+	for(auto& mats : m_boneInfo)
 	{
-		std::string name = "u_Bones[" + std::to_string(i) + "]";
-		m_shader->setUniform4fv(name, 1, GL_FALSE, m_boneInfo[i].m_finalTransform);
+		transforms.push_back(mats.m_finalTransform);
 	}
 
-	// Draw mesh
-	GLCALL(glBindVertexArray(m_VAO));
-	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO));
-	GLCALL(glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, 0));
+	m_shader->setUniform4fv("u_Bones", transforms.size(), GL_FALSE, *transforms.data());
 	
-	//drawData->m_renderer->draw(*m_vertexArray, *m_indexBuffer, *m_shader);
-	
-	GLCALL(glBindVertexArray(0));
-	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+	drawData->m_renderer->draw(*m_VA, *m_IB, *m_shader);
 
 	if(m_textured)
 	{
-		// Always good practice to set everything back to defaults once configured.
 		for(unsigned int i = 0; i < m_textures.size(); i++)
 		{
-			GLCALL(glActiveTexture(GL_TEXTURE0 + i));
-			GLCALL(glBindTexture(GL_TEXTURE_2D, 0));
+			m_textures[i]->unbind();
 		}
 	}
-	m_shader->unbind();
 }
 
 void Mesh::processMesh(aiMesh* mesh, const aiScene * scene)
@@ -190,9 +178,9 @@ void Mesh::loadBones(aiMesh * mesh)
 	}
 }
 
-const std::vector<Texture> Mesh::loadMaterialTexture(aiMaterial * mat, aiTextureType type, std::string typeName)
+const std::vector<Texture*> Mesh::loadMaterialTexture(aiMaterial * mat, aiTextureType type, std::string typeName)
 {
-	std::vector<Texture> textures;
+	std::vector<Texture*> textures;
 
 	for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
 	{
@@ -203,9 +191,9 @@ const std::vector<Texture> Mesh::loadMaterialTexture(aiMaterial * mat, aiTexture
 
 		for (auto& texture : m_texturesLoaded)
 		{
-			if (texture.m_path == str)
+			if (texture->getPath() == str.C_Str())
 			{
-				textures.push_back(texture);
+				textures.push_back(texture.get());
 				skip = true;
 
 				break;
@@ -214,13 +202,19 @@ const std::vector<Texture> Mesh::loadMaterialTexture(aiMaterial * mat, aiTexture
 
 		if (!skip)
 		{
-			Texture texture;
-			texture.m_id = loadTexture(str.C_Str(), m_directory);
-			texture.m_type = typeName;
-			texture.m_path = str;
-			textures.push_back(texture);
+			std::unique_ptr<Texture> texture = std::make_unique<Texture>(str.C_Str(), m_directory , typeName) ;
+			m_texturesLoaded.push_back(std::move(texture));
 
-			m_texturesLoaded.push_back(texture);
+			for(auto& texture : m_texturesLoaded)
+			{
+				if(texture->getPath() == str.C_Str())
+				{
+					textures.push_back(texture.get());
+					skip = true;
+
+					break;
+				}
+			}
 		}
 	}
 
@@ -229,36 +223,15 @@ const std::vector<Texture> Mesh::loadMaterialTexture(aiMaterial * mat, aiTexture
 
 void Mesh::initialiseMesh()
 {
-	// Create buffers/arrays
-	GLCALL(glGenVertexArrays(1, &m_VAO));
-	GLCALL(glGenBuffers(1, &m_VBO));
-	GLCALL(glGenBuffers(1, &EBO));
+	m_VB = std::make_unique<VertexBuffer>(&m_vertices[0], sizeof(Vertex) * m_vertices.size());
+	m_IB = std::make_unique<IndexBuffer>(&m_indices[0], m_indices.size());
 
-	GLCALL(glBindVertexArray(m_VAO));
+	VertexBufferLayout layout;
+	layout.push<Vertex>(0);
 
-
-	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, m_VBO));
-	GLCALL(glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(m_vertices[0]), &m_vertices[0], GL_STATIC_DRAW));
-
-	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO));
-	GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size() * sizeof(unsigned int), &m_indices[0], GL_STATIC_DRAW));
-
-	// Set the vertex attribute pointers
-	// Vertex Positions
-	GLCALL(glEnableVertexAttribArray(0));
-	GLCALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, m_pos))));
-	// Vertex Texture Coords
-	GLCALL(glEnableVertexAttribArray(1));
-	GLCALL(glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, m_textureCoords))));
-
-	//Bone Ids 
-	GLCALL(glEnableVertexAttribArray(2));
-	GLCALL(glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, m_id))));
-	//Bone weights
-	GLCALL(glEnableVertexAttribArray(3));
-	GLCALL(glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, m_weights))));
-
-	glBindVertexArray(0);
+	m_VA = std::make_unique<VertexArray>();
+	m_VA->init();
+	m_VA->addBuffer(*m_VB, layout);
 }
 
 void Mesh::setBoneTransform(const glm::mat4& transform, const std::string& name, 

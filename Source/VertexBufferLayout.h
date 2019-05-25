@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include "Vertex.h"
 #include <GL/glew.h>
 
 struct VertexBufferElement
@@ -57,6 +58,20 @@ public:
 		m_elements.push_back({GL_UNSIGNED_BYTE, count, GL_TRUE});
 		m_stride += count * VertexBufferElement::getSizeOfType(GL_UNSIGNED_BYTE);
 	}
+
+	template<>
+	void push<Vertex>(unsigned int count)
+	{
+		m_elements.push_back({GL_FLOAT, 3, GL_FALSE});
+		m_stride += 3 * VertexBufferElement::getSizeOfType(GL_FLOAT);
+		m_elements.push_back({GL_FLOAT, 2, GL_FALSE});
+		m_stride += 2 * VertexBufferElement::getSizeOfType(GL_FLOAT);
+		m_elements.push_back({GL_FLOAT, 4, GL_FALSE});
+		m_stride += 4 * VertexBufferElement::getSizeOfType(GL_FLOAT);
+		m_elements.push_back({GL_FLOAT, 4, GL_FALSE});
+		m_stride += 4 * VertexBufferElement::getSizeOfType(GL_FLOAT);
+	}
+
 
 	inline const std::vector<VertexBufferElement> getElements() const { return m_elements; }
 	inline unsigned int getStride() const { return m_stride; }

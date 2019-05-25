@@ -23,6 +23,11 @@ Model::Model(const char * path) : GameObject3D()
 
 Model::~Model()
 {
+	if(m_importer)
+	{
+		delete m_importer;
+		m_importer = nullptr;
+	}
 }
 
 void Model::tick(GameData * gameData)
@@ -115,8 +120,8 @@ void Model::rotate(const float & angle, const glm::vec3 & axis)
 
 void Model::loadModel(const std::string & path)
 {
-	m_importer = std::make_unique<Assimp::Importer>();
-	m_scene = std::make_unique<aiScene>(*(m_importer->ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_OptimizeMeshes)));
+	m_importer = new Assimp::Importer();
+	m_scene = new aiScene(*m_importer->ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_OptimizeMeshes));
 
 	if (!m_scene || m_scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !m_scene->mRootNode)
 	{
@@ -129,7 +134,7 @@ void Model::loadModel(const std::string & path)
 
 	m_directory = path.substr(0, path.find_last_of('/'));
 
-	processNode(m_scene->mRootNode, m_scene.get());
+	processNode(m_scene->mRootNode, m_scene);
 }
 
 void Model::processNode(aiNode * node, const aiScene * scene)
@@ -172,6 +177,7 @@ void Model::readNodeHierarchy(const float animTime, const aiNode * node, const g
 	const aiAnimation* animation = m_scene->mAnimations[0];
 	const aiNodeAnim* animNode = findAnimNode(animation, name);
 
+	//Calculate a transform for the bone if node is found
 	if (animNode)
 	{
 		aiVector3D scale = calcInterpolatedScaling(animTime, animNode);
@@ -187,13 +193,16 @@ void Model::readNodeHierarchy(const float animTime, const aiNode * node, const g
 		nodeTransform = matTranslation * matRotation * matScale;
 	}
 
+	//Apply transform to create global transform 
 	glm::mat4 globalTransform = parentTransform * nodeTransform;
 
+	//Apply to bones in mesh
 	for (auto& mesh : m_meshes)
 	{
 		mesh->setBoneTransform(globalTransform, name, m_globalInverseMatrix);
 	}
 
+	//Recurse until all nodes are done
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
 	{
 		readNodeHierarchy(animTime, node->mChildren[i], globalTransform);

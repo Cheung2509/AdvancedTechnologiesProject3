@@ -15,13 +15,6 @@ struct Vertex
 	glm::vec4 m_weights = glm::vec4(0.0f);
 };
 
-struct Texture
-{
-	unsigned int m_id;
-	std::string m_type;
-	aiString m_path;
-};
-
 struct BoneInfo
 {
 	glm::mat4 m_boneOffset;
@@ -34,7 +27,7 @@ static void addBoneData(Vertex& v, unsigned int id, float weight)
 	{
 		if(v.m_weights[i] == 0.0f)
 		{
-			v.m_id[i] = id;
+			v.m_id[i] = float(id);
 			v.m_weights[i] = weight;
 			return;
 		}

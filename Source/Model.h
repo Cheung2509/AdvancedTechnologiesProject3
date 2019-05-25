@@ -44,8 +44,8 @@ protected:
 
 	std::shared_ptr<Shader> m_shader;
 
-	std::unique_ptr<aiScene> m_scene;
-	std::unique_ptr<Assimp::Importer> m_importer;
+	aiScene* m_scene;
+	Assimp::Importer* m_importer;
 
 	std::map<std::string, aiNodeAnim*> m_animNodes;
 

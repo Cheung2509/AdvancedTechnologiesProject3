@@ -18,9 +18,11 @@ uniform mat4 u_Bones[MAX_BONES];
 void main()
 {	
 	mat4 BoneTransform = u_Bones[uint(boneIDs[0])] * weights[0];
-	BoneTransform += u_Bones[ uint(boneIDs[1])] * weights[1];
-	BoneTransform += u_Bones[uint(boneIDs[2])] * weights[2];
-	BoneTransform += u_Bones[uint(boneIDs[3])] * weights[3];
+	
+	for(int i = 1; i < boneIDs.length(); i++)
+	{
+		BoneTransform += u_Bones[uint(boneIDs[i])] * weights[i];
+	}
 
 	if(u_useAnimations)
 	{
@@ -32,5 +34,5 @@ void main()
 	}
 
     TexCoords = texCoords;
-	oWeights = weights;
+	oWeights =  boneIDs / 10;
 }
