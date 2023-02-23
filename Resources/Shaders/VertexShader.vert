@@ -8,7 +8,6 @@ layout ( location = 4 ) in vec4 weights;
 
 out vec2 TexCoords;
 out vec3 oNormal;
-out vec4 fragColour;
 out vec4 oWeights;
 
 const int MAX_BONES = 100;

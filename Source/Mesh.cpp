@@ -17,12 +17,12 @@ std::vector<std::unique_ptr<Texture>> Mesh::m_texturesLoaded = std::vector<std::
 
 void Mesh::tick(GameData * gameData)
 {
-	if(gameData->m_keyboard.keyIsPressed('Z'))
+	if(gameData->m_keyboard.keyIsPressed('Z') && !gameData->m_prevKeyboard.keyIsPressed('Z'))
 	{
 		m_animate = !m_animate;
 	}
 
-	if(gameData->m_keyboard.keyIsPressed('X'))
+	if(gameData->m_keyboard.keyIsPressed('X') && !gameData->m_prevKeyboard.keyIsPressed('X'))
 	{
 		renderType = static_cast<RenderType>(renderType + 1);
 

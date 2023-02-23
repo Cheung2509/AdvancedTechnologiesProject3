@@ -2,7 +2,6 @@
 
 in vec2 TexCoords;
 in vec3 normal;
-in vec4 fragmentColour;
 in vec4 oWeights;
 
 out vec4 color;
@@ -25,6 +24,9 @@ void main( )
 	}
 	else if(u_renderType == 2)
 	{
-		color = vec4(abs(normalize(normal)), 1.0);
+		float r = abs(oWeights[0]);
+		float g = abs(oWeights[1]);
+		float b = abs(oWeights[2]);
+		color = vec4(r, g, b, 1.0);
 	}
 }
