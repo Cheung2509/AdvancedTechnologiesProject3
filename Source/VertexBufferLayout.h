@@ -35,7 +35,7 @@ public:
 	template<typename T>
 	void push(unsigned int count)
 	{
-		static_assert(false);
+		//static_assert(false);
 	}
 
 	template<>
@@ -62,13 +62,13 @@ public:
 	template<>
 	void push<Vertex>(unsigned int count)
 	{
-		m_elements.push_back({GL_FLOAT, 3, GL_FALSE});
+		m_elements.push_back({ GL_FLOAT, 3, GL_FALSE });
 		m_stride += 3 * VertexBufferElement::getSizeOfType(GL_FLOAT);
-		m_elements.push_back({GL_FLOAT, 2, GL_FALSE});
+		m_elements.push_back({ GL_FLOAT, 2, GL_FALSE });
 		m_stride += 2 * VertexBufferElement::getSizeOfType(GL_FLOAT);
-		m_elements.push_back({GL_FLOAT, 4, GL_FALSE});
+		m_elements.push_back({ GL_FLOAT, 4, GL_FALSE });
 		m_stride += 4 * VertexBufferElement::getSizeOfType(GL_FLOAT);
-		m_elements.push_back({GL_FLOAT, 4, GL_FALSE});
+		m_elements.push_back({ GL_FLOAT, 4, GL_FALSE });
 		m_stride += 4 * VertexBufferElement::getSizeOfType(GL_FLOAT);
 	}
 
