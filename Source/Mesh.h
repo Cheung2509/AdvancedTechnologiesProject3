@@ -19,6 +19,14 @@
 class Mesh : public GameObject3D
 {
 public:
+	enum RenderType
+	{
+		TEXTURE = 0,
+		BONE_IDS = 1,
+		NORMALS = 2,
+		RENDER_TYPE_SIZE
+	};
+
 	Mesh() {}
 	Mesh(aiMesh* mesh, const aiScene* scene, std::string directory);
 	
@@ -38,7 +46,7 @@ private:
 private:
 	std::string m_directory;
 	bool m_animate = true;
-	bool m_textured = true;
+	RenderType renderType = RenderType::TEXTURE;
 
 	std::vector<Vertex> m_vertices;
 	std::vector<unsigned int> m_indices;

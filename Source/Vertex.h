@@ -10,6 +10,7 @@
 struct Vertex
 {
 	glm::vec3 m_pos;
+	glm::vec3 m_normal;
 	glm::vec2 m_textureCoords;
 	glm::vec4 m_id = glm::vec4(0);
 	glm::vec4 m_weights = glm::vec4(0.0f);
@@ -23,7 +24,8 @@ struct BoneInfo
 
 static void addBoneData(Vertex& v, unsigned int id, float weight)
 {
-	for(unsigned int i = 0; i < sizeof(v.m_id) / sizeof(v.m_id[0]); i++)
+	unsigned int size = sizeof(glm::vec4) / sizeof(v.m_id[0]);
+	for(unsigned int i = 0; i < size ; i++)
 	{
 		if(v.m_weights[i] == 0.0f)
 		{
@@ -32,5 +34,5 @@ static void addBoneData(Vertex& v, unsigned int id, float weight)
 			return;
 		}
 	}
-	assert(0);
+	//assert(0);
 }

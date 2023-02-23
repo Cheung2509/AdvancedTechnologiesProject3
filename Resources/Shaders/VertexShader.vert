@@ -1,11 +1,13 @@
 #version 430 core
 
 layout ( location = 0 ) in vec3 position;
-layout ( location = 1 ) in vec2 texCoords;
-layout ( location = 2 ) in vec4 boneIDs;
-layout ( location = 3 ) in vec4 weights;
+layout ( location = 1 ) in vec3 normal;
+layout ( location = 2 ) in vec2 texCoords;
+layout ( location = 3 ) in vec4 boneIDs;
+layout ( location = 4 ) in vec4 weights;
 
 out vec2 TexCoords;
+out vec3 oNormal;
 out vec4 fragColour;
 out vec4 oWeights;
 
@@ -33,6 +35,7 @@ void main()
 		gl_Position = u_MVP * vec4(position, 1.0f);
 	}
 
-    TexCoords = texCoords;
+  TexCoords = texCoords;
+	oNormal = normal;
 	oWeights =  boneIDs / 10;
 }

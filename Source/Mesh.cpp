@@ -24,14 +24,20 @@ void Mesh::tick(GameData * gameData)
 
 	if(gameData->m_keyboard.keyIsPressed('X'))
 	{
-		m_textured = !m_textured;
+		renderType = static_cast<RenderType>(renderType + 1);
+
+		if (renderType == RenderType::RENDER_TYPE_SIZE)
+		{
+			renderType = RenderType::TEXTURE;
+		}
 	}
+
 	GameObject3D::tick(gameData);
 }
 
 void Mesh::draw(DrawData * drawData)
 {
-	if(m_textured)
+	if(renderType == RenderType::TEXTURE)
 	{
 		for(unsigned int i = 0; i < m_textures.size(); i++)
 		{
@@ -42,7 +48,7 @@ void Mesh::draw(DrawData * drawData)
 	m_shader->bind();
 
 	//Send uniform information to GPU
-	m_shader->setBool("u_textured", m_textured);
+	m_shader->setUniform1i("u_renderType", static_cast<int>(renderType));
 	
 	m_shader->setBool("u_useAnimations", m_animate);
 
@@ -60,7 +66,7 @@ void Mesh::draw(DrawData * drawData)
 	
 	drawData->m_renderer->draw(*m_VA, *m_IB, *m_shader);
 
-	if(m_textured)
+	if(renderType == RenderType::TEXTURE)
 	{
 		for(unsigned int i = 0; i < m_textures.size(); i++)
 		{
@@ -110,13 +116,16 @@ void Mesh::loadVertices(aiMesh * mesh)
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 	{
 		Vertex vertex;
-		glm::vec3 vector;
-
-		//get position
-		vector.x = mesh->mVertices[i].x;
-		vector.y = mesh->mVertices[i].y;
-		vector.z = mesh->mVertices[i].z;
-		vertex.m_pos = vector;
+		vertex.m_pos = glm::vec3(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
+		
+		if (mesh->HasNormals())	
+		{
+			vertex.m_normal = glm::vec3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
+		}
+		else
+		{
+			vertex.m_normal = glm::vec3(0.0f);
+		}
 
 		//get texture coord
 		if (mesh->mTextureCoords[0])
